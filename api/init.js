@@ -30,7 +30,7 @@ export default async function handler(req, res) {
           has_onboarded BOOLEAN DEFAULT FALSE,
           growth_level INTEGER DEFAULT 25,
           readiness INTEGER DEFAULT 35,
-          target_role VARCHAR(500),
+          target_role TEXT,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
@@ -42,10 +42,10 @@ export default async function handler(req, res) {
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
           user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
           type VARCHAR(50) NOT NULL CHECK (type IN ('success', 'actionable', 'gap')),
-          title VARCHAR(500) NOT NULL,
+          title TEXT NOT NULL,
           description TEXT NOT NULL,
           status VARCHAR(50) DEFAULT 'active' CHECK (status IN ('active', 'completed', 'shared')),
-          mission_title VARCHAR(500),
+          mission_title TEXT,
           mission_brief TEXT,
           action_content TEXT,
           timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
