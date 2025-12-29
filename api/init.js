@@ -14,10 +14,16 @@ export default async function handler(req, res) {
   }
 
   try {
-    // Define schema directly in code to avoid file reading issues in serverless
-    const schema = `
-      -- Users Table
-      CREATE TABLE IF NOT EXISTS users (
+    // Enable UUID extension
+    await query('CREATE EXTENSION IF NOT EXISTS "pgcrypto"');
+
+    // Drop existing tables to ensure clean state and fix constraint issues
+    await query('DROP TABLE IF EXISTS insights');
+    await query('DROP TABLE IF EXISTS users');
+
+    // Create Users Table
+    await query(`
+      CREATE TABLE users (
           id SERIAL PRIMARY KEY,
           username VARCHAR(255) UNIQUE NOT NULL,
           password VARCHAR(255) NOT NULL,
@@ -27,10 +33,12 @@ export default async function handler(req, res) {
           target_role VARCHAR(500),
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+      )
+    `);
 
-      -- Insights Table
-      CREATE TABLE IF NOT EXISTS insights (
+    // Create Insights Table
+    await query(`
+      CREATE TABLE insights (
           id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
           user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
           type VARCHAR(50) NOT NULL CHECK (type IN ('success', 'actionable', 'gap')),
@@ -42,15 +50,19 @@ export default async function handler(req, res) {
           action_content TEXT,
           timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-      );
+      )
+    `);
 
-      -- Create indexes
+    // Create indexes
+    await query(`
       CREATE INDEX IF NOT EXISTS idx_insights_user_id ON insights(user_id);
       CREATE INDEX IF NOT EXISTS idx_insights_type ON insights(type);
       CREATE INDEX IF NOT EXISTS idx_insights_status ON insights(status);
       CREATE INDEX IF NOT EXISTS idx_insights_timestamp ON insights(timestamp DESC);
+    `);
 
-      -- Function to update updated_at timestamp
+    // Function to update updated_at timestamp
+    await query(`
       CREATE OR REPLACE FUNCTION update_updated_at_column()
       RETURNS TRIGGER AS $$
       BEGIN
@@ -58,14 +70,13 @@ export default async function handler(req, res) {
           RETURN NEW;
       END;
       $$ language 'plpgsql';
+    `);
 
-      -- Trigger to automatically update updated_at
-      DROP TRIGGER IF EXISTS update_users_updated_at ON users;
+    // Trigger
+    await query(`
       CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON users
           FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-    `;
-
-    await query(schema);
+    `);
     
     res.json({ 
       success: true, 
