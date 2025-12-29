@@ -120,8 +120,7 @@ const App: React.FC = () => {
     const initialChecklist = await generateInitialRoadmap(file.name, goal);
     
     // 3. Persist immediately
-    await // 3. Persist immediately
-    updateInsights(initialChecklist);
+    await updateInsights(initialChecklist);
     
     // 4. Switch to Roadmap tab to show the "pointers" immediately
     setActiveTab('roadmap');
@@ -138,6 +137,7 @@ const App: React.FC = () => {
     
     // Prepend new insight and save
     await updateInsights(updatedList);
+    const updatedList = [newInsight, ...insights];
     
     if (type === UploadType.RESUME) {
         const newGrowth = Math.min(currentUser.growthLevel + 10, 60);
@@ -159,11 +159,11 @@ const App: React.FC = () => {
     setIsProcessing(true);
     const planInsight = await generateActionPlan(goal);
     
-    // Prepend and save
+    const updatedList = [planInsight, ...insights];
     await updateInsights(updatedList);
     
     const newReadiness = Math.max(currentUser.readiness - 10, 20);
-    await const newReadiness = Math.max(currentUser.readiness - 10, 20);
+    await await const newReadiness = Math.max(currentUser.readiness - 10, 20);
     updateUserData({ readiness: newReadiness, targetRole: goal });
     
     setIsProcessing(false);
