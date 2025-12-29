@@ -163,8 +163,7 @@ const App: React.FC = () => {
     await updateInsights(updatedList);
     
     const newReadiness = Math.max(currentUser.readiness - 10, 20);
-    await await const newReadiness = Math.max(currentUser.readiness - 10, 20);
-    updateUserData({ readiness: newReadiness, targetRole: goal });
+    await updateUserData({ readiness: newReadiness, targetRole: goal });
     
     setIsProcessing(false);
     setActiveTab('roadmap');
