@@ -108,7 +108,7 @@ export const authService = {
     if (!currentUsername) return;
 
     try {
-      await fetch(`${API_URL}/insights`, {
+      await fetch(`${API_URL}/insights/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -158,10 +158,10 @@ export const authService = {
 
   updateInsightStatus: async (id: string, status: string): Promise<void> => {
     try {
-      await fetch(`${API_URL}/insights/${id}/status`, {
+      await fetch(`${API_URL}/insights/status`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status })
+        body: JSON.stringify({ id, status })
       });
     } catch (error) {
       console.error('Update insight status error:', error);
