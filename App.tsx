@@ -147,8 +147,7 @@ const App: React.FC = () => {
     } else {
         const newGrowth = Math.min(currentUser.growthLevel + 15, 100);
         const newReadiness = Math.min(currentUser.readiness + 12, 100);
-        await const newReadiness = Math.min(currentUser.readiness + 12, 100);
-        updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
+        await updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
         setActiveTab('feed'); // Show success in feed
     }
     
