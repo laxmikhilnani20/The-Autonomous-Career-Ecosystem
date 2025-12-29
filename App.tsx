@@ -37,12 +37,12 @@ const App: React.FC = () => {
       setIsLoading(false);
     };
     initializeApp();
-  }, []);async (newInsights: Insight[]) => {
+  }, []);
+
+  // Helper to sync state and DB
+  const updateInsights = async (newInsights: Insight[]) => {
     setInsights(newInsights);
-    await/ Helper to sync state and DB
-  const updateInsights = (newInsights: Insight[]) => {
-    setInsights(newInsights);
-    authService.saveInsights(newInsights);
+    await authService.saveInsights(newInsights);
   };
 
   // Auth Handlers
