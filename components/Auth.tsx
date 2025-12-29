@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Lock, User, Sparkles } from 'lucide-react';
 
 interface AuthProps {
-  onLogin: (username: string, password: string) => boolean;
-  onSignup: (username: string, password: string) => boolean;
+  onLogin: (username: string, password: string) => Promise<boolean>;
+  onSignup: (username: string, password: string) => Promise<boolean>;
 }
 
 const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
@@ -11,8 +11,9 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -21,10 +22,17 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
       return;
     }
 
-    const success = isLogin ? onLogin(username, password) : onSignup(username, password);
-    
-    if (!success) {
-      setError(isLogin ? 'Invalid credentials' : 'Username already exists');
+    setIsLoading(true);
+    try {
+      const success = await (isLogin ? onLogin(username, password) : onSignup(username, password));
+      
+      if (!success) {
+        setError(isLogin ? 'Invalid credentials' : 'Username already exists');
+      }
+    } catch (err) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
     }
   };
 
