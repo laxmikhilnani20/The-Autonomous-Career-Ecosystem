@@ -7,7 +7,7 @@ let pool;
 export const getPool = () => {
   if (!pool) {
     pool = new Pool({
-      connectionString: process.env.DATABASE_URL,
+      connectionString: process.env.DATABASE_URL ? process.env.DATABASE_URL.replace('?sslmode=require', '') : process.env.DATABASE_URL,
       ssl: {
         rejectUnauthorized: false
       },
