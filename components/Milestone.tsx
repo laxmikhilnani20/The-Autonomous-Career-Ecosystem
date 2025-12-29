@@ -1,93 +1,149 @@
 import React, { useState } from 'react';
-import { Target, Search, ArrowRight } from 'lucide-react';
+import { Target, Edit2, Check, TrendingUp } from 'lucide-react';
 
 interface MilestoneProps {
-  onSetGoal: (goal: string) => void;
-  readiness: number; // 0-100
+  onSetGoal: (goal: string) => Promise<void>;
+  readiness: number;
 }
 
 const Milestone: React.FC<MilestoneProps> = ({ onSetGoal, readiness }) => {
-  const [input, setInput] = useState('');
+  const [isEditing, setIsEditing] = useState(false);
+  const [newGoal, setNewGoal] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (input.trim()) {
-      onSetGoal(input);
+  const handleSubmit = async () => {
+    if (newGoal.trim()) {
+      setIsSubmitting(true);
+      await onSetGoal(newGoal);
+      setIsEditing(false);
+      setNewGoal('');
+      setIsSubmitting(false);
     }
   };
 
-  // SVG parameters for circle
-  const radius = 35;
-  const circumference = 2 * Math.PI * radius;
-  const strokeDashoffset = circumference - (readiness / 100) * circumference;
+  const getReadinessState = () => {
+    if (readiness < 40) {
+      return {
+        label: 'Foundation Building',
+        color: 'text-orange-400',
+        bgColor: 'bg-orange-500/10',
+        borderColor: 'border-orange-500/20',
+        barColor: 'from-orange-500 to-orange-400'
+      };
+    } else if (readiness < 70) {
+      return {
+        label: 'Progressing Well',
+        color: 'text-yellow-400',
+        bgColor: 'bg-yellow-500/10',
+        borderColor: 'border-yellow-500/20',
+        barColor: 'from-yellow-500 to-yellow-400'
+      };
+    } else {
+      return {
+        label: 'Ready to Launch',
+        color: 'text-emerald-400',
+        bgColor: 'bg-emerald-500/10',
+        borderColor: 'border-emerald-500/20',
+        barColor: 'from-emerald-500 to-emerald-400'
+      };
+    }
+  };
+
+  const state = getReadinessState();
 
   return (
-    <div className="bg-slate-800/40 border border-slate-700 backdrop-blur-md rounded-2xl p-6 flex flex-col md:flex-row items-center gap-8 relative overflow-hidden">
-      
-      {/* Background Accent */}
-      <div className="absolute -right-10 -top-10 w-40 h-40 bg-purple-500/10 blur-[50px] rounded-full" />
-
-      {/* Input Section */}
-      <div className="flex-1 w-full z-10">
-        <div className="flex items-center gap-2 mb-3 text-emerald-400">
-          <Target className="w-5 h-5" />
-          <h3 className="font-semibold tracking-wide uppercase text-xs">North Star Milestone</h3>
-        </div>
-        <form onSubmit={handleSubmit} className="relative">
-          <input 
-            type="text" 
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder="Paste target role (e.g., 'Senior AI Engineer at Google')..."
-            className="w-full bg-slate-900/50 border border-slate-700 text-slate-100 rounded-xl px-4 py-4 pr-12 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-600"
-          />
-          <button 
-            type="submit"
-            className="absolute right-2 top-2 bottom-2 aspect-square bg-slate-800 hover:bg-emerald-500 hover:text-white text-slate-400 rounded-lg flex items-center justify-center transition-colors"
-          >
-            <ArrowRight className="w-5 h-5" />
-          </button>
-        </form>
+    <div className={`h-full bg-slate-800/30 backdrop-blur-sm border ${state.borderColor} rounded-2xl p-6 relative overflow-hidden`}>
+      {/* Background Decoration */}
+      <div className="absolute inset-0 opacity-20">
+        <div className={`absolute top-0 right-0 w-1/2 h-1/2 ${state.bgColor} blur-3xl`} />
       </div>
 
-      {/* Gauge Section */}
-      <div className="flex items-center gap-6 z-10">
-        <div className="relative w-24 h-24 flex-shrink-0">
-          {/* Background Circle */}
-          <svg className="w-full h-full transform -rotate-90">
-            <circle
-              cx="48"
-              cy="48"
-              r={radius}
-              stroke="currentColor"
-              strokeWidth="6"
-              fill="transparent"
-              className="text-slate-800"
-            />
-            {/* Progress Circle */}
-            <circle
-              cx="48"
-              cy="48"
-              r={radius}
-              stroke="currentColor"
-              strokeWidth="6"
-              fill="transparent"
-              strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
-              strokeLinecap="round"
-              className="text-emerald-400 transition-all duration-1000 ease-out"
-            />
-          </svg>
-          <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-xl font-bold text-white">{readiness}%</span>
-            <span className="text-[9px] text-slate-400 uppercase">Match</span>
+      <div className="relative z-10 h-full flex flex-col">
+        <div className="flex items-start justify-between mb-6">
+          <div className="flex-1">
+            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">
+              North Star Goal
+            </h3>
+            {!isEditing ? (
+              <div className="flex items-center gap-2 group">
+                <p className="text-2xl font-bold text-slate-200">Set Your Target</p>
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 rounded-lg"
+                >
+                  <Edit2 className="w-4 h-4 text-slate-400" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex gap-2 mt-2">
+                <input
+                  type="text"
+                  value={newGoal}
+                  onChange={(e) => setNewGoal(e.target.value)}
+                  placeholder="e.g., Senior Product Manager"
+                  className="flex-1 bg-slate-900/50 border border-white/10 rounded-lg py-2 px-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm"
+                  autoFocus
+                />
+                <button
+                  onClick={handleSubmit}
+                  disabled={!newGoal.trim() || isSubmitting}
+                  className={`px-3 py-2 ${state.bgColor} ${state.color} border ${state.borderColor} rounded-lg hover:bg-opacity-20 transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
+                >
+                  <Check className="w-4 h-4" />
+                </button>
+              </div>
+            )}
+          </div>
+          <div className={`${state.bgColor} ${state.borderColor} border rounded-xl p-3`}>
+            <Target className={`w-8 h-8 ${state.color}`} />
           </div>
         </div>
-        
-        <div className="hidden xl:block">
-          <p className="text-sm font-medium text-white">Gap Closing</p>
-          <p className="text-xs text-slate-400">Keep watering your garden.</p>
+
+        {/* Readiness Meter */}
+        <div className="flex-1 flex flex-col justify-center space-y-4">
+          <div className="flex items-center gap-2">
+            <TrendingUp className={`w-5 h-5 ${state.color}`} />
+            <span className="text-sm font-medium text-slate-400">Career Readiness</span>
+          </div>
+
+          <div className="relative">
+            <div className="w-full h-4 bg-slate-900/50 rounded-full overflow-hidden border border-white/10">
+              <div
+                className={`h-full bg-gradient-to-r ${state.barColor} transition-all duration-1000 ease-out relative`}
+                style={{ width: `${readiness}%` }}
+              >
+                <div className="absolute inset-0 bg-white/20 animate-pulse" />
+              </div>
+            </div>
+            <div
+              className={`absolute top-1/2 -translate-y-1/2 ${state.color} font-bold text-sm`}
+              style={{ left: `${Math.max(readiness - 5, 5)}%` }}
+            >
+              {readiness}%
+            </div>
+          </div>
+
+          <div className={`${state.bgColor} ${state.borderColor} border rounded-lg p-4`}>
+            <p className={`text-sm font-semibold ${state.color} mb-1`}>{state.label}</p>
+            <p className="text-xs text-slate-400">
+              {readiness < 40 && 'Keep building your foundation. Complete tasks to increase readiness.'}
+              {readiness >= 40 && readiness < 70 && 'You\'re making great progress! Stay consistent.'}
+              {readiness >= 70 && 'You\'re well-prepared! Consider applying to target roles.'}
+            </p>
+          </div>
         </div>
+
+        {/* Quick Action Hint */}
+        {!isEditing && (
+          <div className="mt-4 pt-4 border-t border-white/10">
+            <button
+              onClick={() => setIsEditing(true)}
+              className="w-full py-2.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-400 rounded-lg transition-all text-sm font-medium"
+            >
+              Update North Star
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

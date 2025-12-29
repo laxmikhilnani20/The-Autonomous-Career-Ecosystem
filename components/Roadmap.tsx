@@ -1,6 +1,6 @@
 import React from 'react';
 import { Insight } from '../types';
-import { CheckCircle2, Circle, Target, ListTodo, ChevronRight } from 'lucide-react';
+import { AlertCircle, CheckCircle, MapPin, Target } from 'lucide-react';
 
 interface RoadmapProps {
   insights: Insight[];
@@ -10,110 +10,153 @@ interface RoadmapProps {
 }
 
 const Roadmap: React.FC<RoadmapProps> = ({ insights, targetRole, readiness, onSelectInsight }) => {
-  // Filter for items that are essentially checklist items (gaps or actionable)
-  const checklistItems = insights.filter(i => i.type === 'gap' || i.type === 'actionable');
-  
-  // Calculate specific matrix stats
-  const completedCount = checklistItems.filter(i => i.status === 'completed' || i.status === 'shared').length;
-  const totalCount = checklistItems.length;
+  // Filter only gap-type insights for the roadmap
+  const gapInsights = insights.filter(i => i.type === 'gap');
+
+  const completedCount = gapInsights.filter(i => i.status === 'completed').length;
+  const totalCount = gapInsights.length;
   const progressPercent = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
+  if (gapInsights.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center">
+        <div className="text-center max-w-md">
+          <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <MapPin className="w-8 h-8 text-slate-500" />
+          </div>
+          <h3 className="text-xl font-semibold text-slate-300 mb-2">No Strategy Items Yet</h3>
+          <p className="text-slate-500 text-sm">
+            Upload your resume to generate a personalized roadmap
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="bg-slate-900/50 border border-slate-800 rounded-3xl p-6 h-full flex flex-col backdrop-blur-md">
-      
-      {/* Header */}
-      <div className="flex items-center gap-3 mb-6 pb-6 border-b border-white/5">
-        <div className="p-2.5 bg-indigo-500/10 rounded-xl">
-           <ListTodo className="w-6 h-6 text-indigo-400" />
-        </div>
-        <div>
-           <h2 className="font-bold text-white tracking-tight">Career Matrix</h2>
-           <p className="text-xs text-slate-500 font-mono uppercase">System Audit & Roadmap</p>
-        </div>
-      </div>
-
-      {/* Target Summary */}
-      <div className="mb-6 space-y-4">
-        <div className="p-4 bg-slate-950 rounded-xl border border-slate-800">
-            <div className="flex justify-between items-center mb-2">
-                <span className="text-xs text-slate-400 font-bold uppercase">Target Locked</span>
-                <Target className="w-4 h-4 text-emerald-400" />
-            </div>
-            <p className="text-sm font-medium text-slate-200 line-clamp-2 leading-relaxed">
-                {targetRole || "No Target Set"}
+    <div className="h-full flex flex-col">
+      {/* Header with Progress */}
+      <div className="mb-6 pb-4 border-b border-white/10">
+        <div className="flex items-start justify-between mb-4">
+          <div>
+            <h3 className="text-lg font-semibold text-slate-200 mb-1">
+              {targetRole ? `Path to ${targetRole}` : 'Your Career Strategy'}
+            </h3>
+            <p className="text-sm text-slate-400">
+              {completedCount} of {totalCount} milestones completed
             </p>
+          </div>
+          <div className="text-right">
+            <div className="text-2xl font-bold text-purple-400">{progressPercent}%</div>
+            <div className="text-xs text-slate-500">Complete</div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-3">
-             <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-center">
-                 <span className="block text-2xl font-bold text-emerald-400">{readiness}%</span>
-                 <span className="text-[10px] text-slate-500 uppercase tracking-wide">Ready</span>
-             </div>
-             <div className="p-3 bg-slate-950 rounded-xl border border-slate-800 text-center">
-                 <span className="block text-2xl font-bold text-purple-400">{completedCount}/{totalCount}</span>
-                 <span className="text-[10px] text-slate-500 uppercase tracking-wide">Missions</span>
-             </div>
+        {/* Progress Bar */}
+        <div className="w-full h-2 bg-slate-900/50 rounded-full overflow-hidden border border-white/10">
+          <div
+            className="h-full bg-gradient-to-r from-purple-500 to-emerald-500 transition-all duration-1000 ease-out"
+            style={{ width: `${progressPercent}%` }}
+          />
         </div>
       </div>
 
-      {/* Checklist Scroller */}
+      {/* Checklist Items */}
       <div className="flex-1 overflow-y-auto custom-scrollbar pr-2 space-y-3">
-         <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3 pl-1">Strategic Checklist</h3>
-         
-         {checklistItems.length === 0 ? (
-            <div className="text-center py-8 text-slate-600 text-xs">
-                No active protocols.
+        {gapInsights.map((insight, index) => {
+          const isCompleted = insight.status === 'completed';
+
+          return (
+            <div
+              key={insight.id}
+              onClick={() => onSelectInsight(insight)}
+              className={`bg-slate-800/30 border ${
+                isCompleted ? 'border-emerald-500/30' : 'border-purple-500/30'
+              } rounded-xl p-4 cursor-pointer transition-all hover:scale-[1.01] hover:shadow-lg relative`}
+            >
+              {/* Checkpoint Number */}
+              <div className="absolute -left-3 top-4">
+                <div
+                  className={`w-8 h-8 rounded-full border-2 ${
+                    isCompleted
+                      ? 'bg-emerald-500 border-emerald-400'
+                      : 'bg-slate-800 border-purple-500'
+                  } flex items-center justify-center font-bold text-xs text-white shadow-lg`}
+                >
+                  {isCompleted ? <CheckCircle className="w-4 h-4" /> : index + 1}
+                </div>
+              </div>
+
+              <div className="pl-6">
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <h4
+                    className={`font-semibold text-slate-200 ${
+                      isCompleted ? 'line-through opacity-60' : ''
+                    }`}
+                  >
+                    {insight.title}
+                  </h4>
+                  {isCompleted && (
+                    <span className="text-xs text-emerald-400 bg-emerald-500/10 px-2 py-1 rounded font-medium">
+                      ✓ Done
+                    </span>
+                  )}
+                </div>
+
+                <p className="text-sm text-slate-400 mb-3">
+                  {insight.description}
+                </p>
+
+                {insight.missionTitle && (
+                  <div className="flex items-center gap-2 text-xs">
+                    <Target className="w-4 h-4 text-purple-400" />
+                    <span className="font-medium text-purple-400">
+                      {insight.missionTitle}
+                    </span>
+                  </div>
+                )}
+
+                {!isCompleted && (
+                  <div className="mt-3 pt-3 border-t border-white/10">
+                    <button className="text-xs text-purple-400 hover:text-purple-300 font-medium transition-colors">
+                      View Details & Take Action →
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-         ) : (
-             checklistItems.map(item => {
-                 const isDone = item.status === 'completed' || item.status === 'shared';
-                 return (
-                     <button 
-                        key={item.id} 
-                        onClick={() => onSelectInsight(item)}
-                        className={`
-                          w-full group flex gap-3 items-center p-3 rounded-xl transition-all text-left border border-transparent
-                          ${isDone 
-                            ? 'bg-emerald-950/20 opacity-60 hover:bg-emerald-950/30' 
-                            : 'bg-slate-800/40 hover:bg-slate-800 hover:border-slate-700/50 hover:shadow-lg'}
-                        `}
-                     >
-                         <div className="mt-0.5 flex-shrink-0">
-                             {isDone ? (
-                                 <CheckCircle2 className="w-5 h-5 text-emerald-500" />
-                             ) : (
-                                 <Circle className="w-5 h-5 text-slate-600 group-hover:text-purple-400 transition-colors" />
-                             )}
-                         </div>
-                         <div className="flex-1 min-w-0">
-                             <p className={`text-sm font-medium truncate ${isDone ? 'text-slate-400 line-through' : 'text-slate-200'}`}>
-                                 {item.missionTitle || item.title}
-                             </p>
-                             <p className="text-[10px] text-slate-500 mt-0.5 line-clamp-1">
-                                 {item.type === 'gap' ? 'Critical Gap' : 'Optimization'}
-                             </p>
-                         </div>
-                         {!isDone && (
-                           <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white opacity-0 group-hover:opacity-100 transition-all transform group-hover:translate-x-1" />
-                         )}
-                     </button>
-                 )
-             })
-         )}
+          );
+        })}
       </div>
 
-      {/* Footer / Call to Action */}
-      <div className="mt-6 pt-4 border-t border-white/5">
-        <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
-            <span>AUDIT STATUS: {progressPercent === 100 ? 'COMPLETE' : 'PENDING'}</span>
-            <div className="flex gap-1">
-                <span className={`w-2 h-2 rounded-full ${progressPercent > 30 ? 'bg-emerald-500' : 'bg-slate-700'}`}></span>
-                <span className={`w-2 h-2 rounded-full ${progressPercent > 60 ? 'bg-emerald-500' : 'bg-slate-700'}`}></span>
-                <span className={`w-2 h-2 rounded-full ${progressPercent === 100 ? 'bg-emerald-500' : 'bg-slate-700'}`}></span>
+      {/* Footer Encouragement */}
+      {completedCount > 0 && completedCount < totalCount && (
+        <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-3 flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 text-purple-400 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-purple-400">Keep Going!</p>
+              <p className="text-xs text-slate-400">
+                {totalCount - completedCount} more {totalCount - completedCount === 1 ? 'task' : 'tasks'} to complete
+              </p>
             </div>
+          </div>
         </div>
-      </div>
+      )}
 
+      {completedCount === totalCount && totalCount > 0 && (
+        <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-lg p-3 flex items-center gap-3">
+            <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-medium text-emerald-400">All Set! 🎉</p>
+              <p className="text-xs text-slate-400">
+                You've completed all milestones. Your readiness: {readiness}%
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

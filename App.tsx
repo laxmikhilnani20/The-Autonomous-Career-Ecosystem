@@ -27,35 +27,38 @@ const App: React.FC = () => {
 
   // Initialize: Check for active session AND load persisted insights
   useEffect(() => {
-    const user = authService.getCurrentUser();
-    if (user) {
-      setCurrentUser(user);
-      const savedInsights = authService.getUserInsights();
-      setInsights(savedInsights);
-    }
-    setIsLoading(false);
-  }, []);
-
-  // Helper to sync state and DB
+    const initializeApp = async () => {
+      const user = authService.getCurrentUser();
+      if (user) {
+        setCurrentUser(user);
+        const savedInsights = await authService.getUserInsights();
+        setInsights(savedInsights);
+      }
+      setIsLoading(false);
+    };
+    initializeApp();
+  }, []);async (newInsights: Insight[]) => {
+    setInsights(newInsights);
+    await/ Helper to sync state and DB
   const updateInsights = (newInsights: Insight[]) => {
     setInsights(newInsights);
     authService.saveInsights(newInsights);
   };
 
   // Auth Handlers
-  const handleLogin = (u: string, p: string) => {
-    const user = authService.login(u, p);
+  const handleLogin = async (u: string, p: string) => {
+    const user = await authService.login(u, p);
     if (user) {
       setCurrentUser(user);
-      const savedInsights = authService.getUserInsights();
+      const savedInsights = await authService.getUserInsights();
       setInsights(savedInsights);
       return true;
     }
     return false;
   };
 
-  const handleSignup = (u: string, p: string) => {
-    const user = authService.signup(u, p);
+  const handleSignup = async (u: string, p: string) => {
+    const user = await authService.signup(u, p);
     if (user) {
       setCurrentUser(user);
       setInsights([]); // New user has empty feed
@@ -71,11 +74,11 @@ const App: React.FC = () => {
     setSelectedInsight(null);
   };
 
-  const updateUserData = (updates: Partial<User>) => {
+  const updateUserData = async (updates: Partial<User>) => {
     if (!currentUser) return;
     const updatedUser = { ...currentUser, ...updates };
     setCurrentUser(updatedUser);
-    authService.updateProgress(
+    await authService.updateProgress(
       updatedUser.growthLevel,
       updatedUser.readiness,
       updatedUser.hasOnboarded,
@@ -84,29 +87,29 @@ const App: React.FC = () => {
   };
 
   // Logic to handle status changes (Complete / Undo)
-  const handleUpdateInsightStatus = (id: string, status: InsightStatus) => {
+  const handleUpdateInsightStatus = async (id: string, status: InsightStatus) => {
     const updatedList = insights.map(insight => 
       insight.id === id ? { ...insight, status } : insight
     );
-    updateInsights(updatedList);
+    await updateInsights(updatedList);
+    await authService.updateInsightStatus(id, status);
     
     // Logic for growth boost or penalty (undo)
     if (currentUser) {
       if (status === 'completed') {
           const newReadiness = Math.min(currentUser.readiness + 5, 100);
-          updateUserData({ readiness: newReadiness });
+          await updateUserData({ readiness: newReadiness });
       } else if (status === 'active') {
           // If undoing, decrease slightly (but maybe not full penalty to be nice)
           const newReadiness = Math.max(currentUser.readiness - 5, 0);
-          updateUserData({ readiness: newReadiness });
+          await updateUserData({ readiness: newReadiness });
       }
     }
   };
 
   // Onboarding: Generate Roadmap and Save IMMEDIATELY
   const handleOnboardingComplete = async (file: File, goal: string) => {
-    // 1. Initial State Boost
-    updateUserData({
+    await updateUserData({
       hasOnboarded: true,
       growthLevel: 30,
       readiness: 45,
@@ -117,6 +120,7 @@ const App: React.FC = () => {
     const initialChecklist = await generateInitialRoadmap(file.name, goal);
     
     // 3. Persist immediately
+    await // 3. Persist immediately
     updateInsights(initialChecklist);
     
     // 4. Switch to Roadmap tab to show the "pointers" immediately
@@ -133,17 +137,17 @@ const App: React.FC = () => {
     const newInsight = await analyzeUploadAndGenerateInsight(type, file.name);
     
     // Prepend new insight and save
-    const updatedList = [newInsight, ...insights];
-    updateInsights(updatedList);
+    await updateInsights(updatedList);
     
     if (type === UploadType.RESUME) {
         const newGrowth = Math.min(currentUser.growthLevel + 10, 60);
         const newReadiness = Math.min(currentUser.readiness + 5, 60);
-        updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
+        await updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
         setActiveTab('roadmap'); // Switch to roadmap to show new gaps
     } else {
         const newGrowth = Math.min(currentUser.growthLevel + 15, 100);
         const newReadiness = Math.min(currentUser.readiness + 12, 100);
+        await const newReadiness = Math.min(currentUser.readiness + 12, 100);
         updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
         setActiveTab('feed'); // Show success in feed
     }
@@ -157,10 +161,10 @@ const App: React.FC = () => {
     const planInsight = await generateActionPlan(goal);
     
     // Prepend and save
-    const updatedList = [planInsight, ...insights];
-    updateInsights(updatedList);
+    await updateInsights(updatedList);
     
     const newReadiness = Math.max(currentUser.readiness - 10, 20);
+    await const newReadiness = Math.max(currentUser.readiness - 10, 20);
     updateUserData({ readiness: newReadiness, targetRole: goal });
     
     setIsProcessing(false);

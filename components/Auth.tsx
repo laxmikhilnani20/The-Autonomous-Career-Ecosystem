@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrainCircuit, ArrowRight, Lock, User, AlertCircle } from 'lucide-react';
+import { Lock, User, Sparkles } from 'lucide-react';
 
 interface AuthProps {
   onLogin: (username: string, password: string) => boolean;
@@ -16,100 +16,106 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
     e.preventDefault();
     setError('');
 
-    if (!username || !password) {
-      setError('Credentials required for neural link.');
+    if (!username.trim() || !password.trim()) {
+      setError('Please fill in all fields');
       return;
     }
 
-    const success = isLogin 
-      ? onLogin(username, password)
-      : onSignup(username, password);
-
+    const success = isLogin ? onLogin(username, password) : onSignup(username, password);
+    
     if (!success) {
-      setError(isLogin ? 'Identity verification failed.' : 'Agent handle already registered.');
+      setError(isLogin ? 'Invalid credentials' : 'Username already exists');
     }
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-slate-950 relative overflow-hidden">
-      {/* Dynamic Background */}
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 pointer-events-none" />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
-      
-      <div className="w-full max-w-md p-8 relative z-10 animate-in fade-in zoom-in-95 duration-500">
-        <div className="bg-slate-900/50 backdrop-blur-xl border border-slate-800 shadow-2xl rounded-3xl p-8">
-          
-          {/* Header */}
-          <div className="text-center mb-10 space-y-4">
-            <div className="w-14 h-14 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-purple-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
-              <BrainCircuit className="w-8 h-8 text-white" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">
-                {isLogin ? 'Access Ecosystem' : 'Initialize Agent'}
-              </h1>
-              <p className="text-slate-400 text-sm mt-1">
-                AURA Secure Gateway v2.5
-              </p>
-            </div>
+    <div className="min-h-screen w-full bg-[#0B1120] flex items-center justify-center p-4">
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-indigo-600/10 blur-[150px]" />
+        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-emerald-600/10 blur-[120px]" />
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <Sparkles className="w-8 h-8 text-emerald-400" />
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-purple-400 bg-clip-text text-transparent">
+              AURA
+            </h1>
+          </div>
+          <p className="text-slate-400 text-sm">Your AI-powered career growth companion</p>
+        </div>
+
+        <div className="bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl">
+          <div className="flex gap-2 mb-6">
+            <button
+              onClick={() => setIsLogin(true)}
+              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                isLogin
+                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
+                  : 'text-slate-400 hover:text-slate-300'
+              }`}
+            >
+              Login
+            </button>
+            <button
+              onClick={() => setIsLogin(false)}
+              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                !isLogin
+                  ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
+                  : 'text-slate-400 hover:text-slate-300'
+              }`}
+            >
+              Sign Up
+            </button>
           </div>
 
-          {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="space-y-2">
-              <label className="text-xs text-slate-400 font-mono ml-1">AGENT HANDLE</label>
-              <div className="relative group">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
-                <input 
-                  type="text" 
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Username
+              </label>
+              <div className="relative">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <input
+                  type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-slate-950/50 border border-slate-700 text-slate-100 rounded-xl px-10 py-3 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-700"
+                  className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-3 pl-11 pr-4 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
                   placeholder="Enter username"
                 />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-xs text-slate-400 font-mono ml-1">PASSPHRASE</label>
-              <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 group-focus-within:text-emerald-400 transition-colors" />
-                <input 
-                  type="password" 
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <input
+                  type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-950/50 border border-slate-700 text-slate-100 rounded-xl px-10 py-3 focus:outline-none focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/50 transition-all placeholder:text-slate-700"
-                  placeholder="••••••••"
+                  className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-3 pl-11 pr-4 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
+                  placeholder="Enter password"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="flex items-center gap-2 text-xs text-red-400 bg-red-400/10 p-3 rounded-lg border border-red-400/20">
-                <AlertCircle className="w-4 h-4" />
+              <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg p-3">
                 {error}
               </div>
             )}
 
-            <button 
+            <button
               type="submit"
-              className="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold py-3 rounded-xl transition-all flex items-center justify-center gap-2 group mt-4 shadow-lg shadow-emerald-500/20"
+              className="w-full bg-gradient-to-r from-emerald-500 to-purple-500 hover:from-emerald-600 hover:to-purple-600 text-white font-medium py-3 rounded-lg transition-all shadow-lg hover:shadow-emerald-500/25"
             >
-              {isLogin ? 'Authenticate' : 'Create Identity'}
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              {isLogin ? 'Login' : 'Create Account'}
             </button>
           </form>
-
-          {/* Toggle */}
-          <div className="mt-8 text-center">
-            <button 
-              onClick={() => { setIsLogin(!isLogin); setError(''); }}
-              className="text-xs text-slate-500 hover:text-emerald-400 transition-colors"
-            >
-              {isLogin ? "First time? Initialize new agent" : "Already registered? Login"}
-            </button>
-          </div>
-
         </div>
       </div>
     </div>

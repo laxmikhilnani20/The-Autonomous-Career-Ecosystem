@@ -1,120 +1,182 @@
-import { Insight, InsightType } from "../types";
+import { GoogleGenAI, Type } from "@google/genai";
+import { Insight } from "../types";
 
-// Helper to call backend
-const apiCall = async (endpoint: string, body: any) => {
-  try {
-    const res = await fetch(`/api${endpoint}`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) throw new Error('API Error');
-    return await res.json();
-  } catch (e) {
-    console.error(e);
-    return null;
+const getClient = () => {
+  const apiKey = process.env.API_KEY;
+  if (!apiKey) {
+    console.warn("API Key not found in process.env.API_KEY");
   }
+  return new GoogleGenAI({ apiKey: apiKey || 'dummy-key-for-ui-demo' });
 };
 
+// NEW: specific function for the 2-step onboarding
 export const generateInitialRoadmap = async (fileName: string, targetRole: string): Promise<Insight[]> => {
-  // Call backend to generate roadmap based on goal and resume (simulated text)
-  const result = await apiCall('/milestone', { 
-    targetRole, 
-    userId: 'user-123' // In real app, get from auth
-  });
+  const ai = getClient();
+  const prompt = `
+    Context: User is onboarding to AURA.
+    Resume File: "${fileName}"
+    Target Goal: "${targetRole}"
 
-  if (result && result.plan) {
-    try {
-      // The backend returns a JSON string in 'plan'
-      const cleanJson = result.plan.replace(/```json|```/g, '').trim();
-      const planData = JSON.parse(cleanJson);
-      
-      return planData.map((item: any) => ({
-        id: crypto.randomUUID(),
-        type: 'gap',
-        title: item.title || "Strategic Gap",
-        description: item.description || item.step || "Action required to reach goal.",
-        status: 'active',
-        missionTitle: item.missionTitle || "Protocol: Skill Acquisition",
-        missionBrief: item.missionBrief || "Complete the recommended training module.",
-        actionContent: item.actionContent || "Just completed a key milestone!",
-        timestamp: new Date()
-      }));
-    } catch (e) {
-      console.error("Failed to parse plan", e);
-    }
-  }
+    Task: Generate 3 distinct "Gap" insights that serve as a checklist for the user to reach the Target Goal based on the Resume.
+    
+    1. A technical skill gap (GAP).
+    2. A strategic/soft skill gap (GAP).
+    3. A certification or proof-of-work gap (GAP).
 
-  // Fallback
-  return [
-    {
+    JSON Schema for the Array:
+    [{
+      "title": "Short title",
+      "description": "Why this is missing for ${targetRole}.",
+      "missionTitle": "Protocol: [Task Name]",
+      "missionBrief": "A detailed, step-by-step instruction on exactly what the user needs to study, build, or do to close this gap. Be specific.",
+      "actionContent": "A professional LinkedIn post draft announcing completion of this task."
+    }]
+  `;
+
+  try {
+     const response = await ai.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+          type: Type.ARRAY,
+          items: {
+            type: Type.OBJECT,
+            properties: {
+              title: { type: Type.STRING },
+              description: { type: Type.STRING },
+              missionTitle: { type: Type.STRING },
+              missionBrief: { type: Type.STRING },
+              actionContent: { type: Type.STRING }
+            }
+          }
+        }
+      }
+    });
+    
+    const text = response.text;
+    if (!text) return [];
+    const data = JSON.parse(text);
+
+    return data.map((item: any) => ({
       id: crypto.randomUUID(),
       type: 'gap',
-      title: 'Skill Gap: Cloud Architecture',
-      description: `Your profile needs more evidence of cloud skills for ${targetRole}.`,
+      title: item.title,
+      description: item.description,
       status: 'active',
-      missionTitle: 'Protocol: AWS Certification',
-      missionBrief: '1. Study VPC and EC2. 2. Deploy a sample app. 3. Pass the practice exam.',
-      actionContent: `Working towards my ${targetRole} goal by mastering Cloud Architecture. #Growth`,
+      missionTitle: item.missionTitle,
+      missionBrief: item.missionBrief,
+      actionContent: item.actionContent,
       timestamp: new Date()
-    }
-  ];
+    }));
+
+  } catch (e) {
+    console.error(e);
+    // Fallback if AI fails
+    return [
+      {
+        id: crypto.randomUUID(),
+        type: 'gap',
+        title: 'Skill Gap: Modern Frameworks',
+        description: `Your resume lacks explicit mention of modern tools required for ${targetRole}.`,
+        status: 'active',
+        missionTitle: 'Protocol: Portfolio Update',
+        missionBrief: 'Step 1: Initialize a Next.js project. Step 2: Build a landing page demonstrating server-side rendering. Step 3: Deploy to Vercel.',
+        actionContent: `Excited to share my latest project targeting ${targetRole} skills! Check out the repo. #Coding`,
+        timestamp: new Date()
+      },
+      {
+        id: crypto.randomUUID(),
+        type: 'gap',
+        title: 'Certification Audit',
+        description: `To reach ${targetRole}, a cloud certification is highly recommended.`,
+        status: 'active',
+        missionTitle: 'Protocol: AWS/GCP Foundations',
+        missionBrief: '1. Complete the Cloud Practitioner Essentials course. 2. Take one practice exam. 3. Score at least 80%.',
+        actionContent: 'Just passed a mock exam for Cloud Foundations. One step closer to certification!',
+        timestamp: new Date()
+      }
+    ];
+  }
 };
 
+// Existing analysis function - simplified for brevity of diff, but logic remains similar
 export const analyzeUploadAndGenerateInsight = async (
   uploadType: 'resume' | 'achievement', 
   fileName: string
 ): Promise<Insight> => {
+  const ai = getClient();
   
-  // Simulate text content from file (in real app, use Document AI on backend)
-  const simulatedText = `File: ${fileName}. Type: ${uploadType}. This document contains professional history and skills.`;
-
-  const result = await apiCall('/analyze', {
-    text: simulatedText,
-    type: uploadType,
-    userId: 'user-123'
-  });
-
-  if (result && result.insight) {
-    try {
-      const cleanJson = result.insight.replace(/```json|```/g, '').trim();
-      const data = JSON.parse(cleanJson);
-      
-      return {
-        id: crypto.randomUUID(),
-        type: data.type === 'success' ? 'success' : 'gap',
-        title: data.title,
-        description: data.description,
-        status: 'active',
-        missionTitle: data.missionTitle, 
-        missionBrief: data.missionBrief,
-        actionContent: "I just updated my professional profile with new insights!",
-        timestamp: new Date()
-      };
-    } catch (e) {
-      console.error("Failed to parse insight", e);
+  const prompt = `
+    User uploaded "${fileName}" to "${uploadType}".
+    Generate a gamified Insight card.
+    
+    If 'resume': Identify a gap.
+    If 'achievement': Identify a success.
+    
+    JSON Schema:
+    {
+      "title": "Title",
+      "description": "Description",
+      "type": "${uploadType === 'resume' ? 'gap' : 'success'}",
+      "missionTitle": "Mission Name (nullable)",
+      "missionBrief": "Specific instructions on what to do next (nullable)",
+      "actionContent": "Draft post"
     }
-  }
+  `;
 
-  return {
-    id: crypto.randomUUID(),
-    type: uploadType === 'resume' ? 'gap' : 'success',
-    title: 'Analysis Complete',
-    description: 'Your document has been processed and added to the vector store.',
-    status: 'active',
-    timestamp: new Date()
-  };
+  try {
+    const response = await ai.models.generateContent({
+      model: 'gemini-3-flash-preview',
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              title: { type: Type.STRING },
+              description: { type: Type.STRING },
+              type: { type: Type.STRING },
+              missionTitle: { type: Type.STRING, nullable: true },
+              missionBrief: { type: Type.STRING, nullable: true },
+              actionContent: { type: Type.STRING }
+            }
+        }
+      }
+    });
+
+    const data = JSON.parse(response.text || '{}');
+    return {
+      id: crypto.randomUUID(),
+      type: data.type,
+      title: data.title,
+      description: data.description,
+      status: 'active',
+      missionTitle: data.missionTitle,
+      missionBrief: data.missionBrief,
+      actionContent: data.actionContent,
+      timestamp: new Date()
+    };
+  } catch (error) {
+    return {
+      id: crypto.randomUUID(),
+      type: uploadType === 'resume' ? 'gap' : 'success',
+      title: 'Analysis Complete',
+      description: 'Data integrated.',
+      status: 'active',
+      timestamp: new Date()
+    };
+  }
 };
 
 export const generateActionPlan = async (goal: string): Promise<Insight> => {
-    // Re-use milestone endpoint for goal setting
-    const result = await apiCall('/milestone', { targetRole: goal, userId: 'user-123' });
-    
+    // Keep existing logic or update if needed
     return {
       id: crypto.randomUUID(),
       type: 'actionable',
       title: 'North Star Updated',
-      description: `Readiness Score: ${result?.readiness || 0}%. Analysis complete.`,
+      description: `Re-aligning path to ${goal}.`,
       status: 'active',
       timestamp: new Date()
     };
