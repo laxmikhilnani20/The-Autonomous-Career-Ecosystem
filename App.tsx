@@ -198,7 +198,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen w-full bg-[#0B1120] overflow-hidden text-slate-200 font-sans selection:bg-emerald-500/30">
+    <div className="flex h-screen w-full overflow-hidden text-slate-200 font-sans selection:bg-emerald-500/30">
       
       {/* Sidebar (Left) - Collapsible */}
       <div className={`transition-all duration-300 ease-in-out ${
