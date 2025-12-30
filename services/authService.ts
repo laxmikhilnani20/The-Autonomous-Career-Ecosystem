@@ -2,8 +2,19 @@ import { User, Insight } from '../types';
 
 const API_URL = '/api';
 
-// Store current user in memory for session
-let currentUsername: string | null = null;
+// Store current user in memory AND localStorage for persistence
+let currentUsername: string | null = localStorage.getItem('aura_username');
+let currentUserData: User | null = null;
+
+// Initialize user data from localStorage on module load
+const storedUser = localStorage.getItem('aura_user');
+if (storedUser) {
+  try {
+    currentUserData = JSON.parse(storedUser);
+  } catch (e) {
+    console.error('Failed to parse stored user data');
+  }
+}
 
 export const authService = {
   login: async (username: string, password: string): Promise<User | null> => {
@@ -41,6 +52,12 @@ export const authService = {
 
       const data = await response.json();
       currentUsername = username;
+      currentUserData = data.user;
+      
+      // Persist to localStorage
+      localStorage.setItem('aura_username', username);
+      localStorage.setItem('aura_user', JSON.stringify(data.user));
+      
       return data.user;
     } catch (error) {
       console.error('Signup error:', error);
@@ -50,12 +67,13 @@ export const authService = {
 
   logout: () => {
     currentUsername = null;
+    currentUserData = null;
+    localStorage.removeItem('aura_username');
+    localStorage.removeItem('aura_user');
   },
 
   getCurrentUser: (): User | null => {
-    // In a real app, you'd check session/JWT token
-    // For now, we rely on the in-memory username
-    return currentUsername ? { username: currentUsername } as User : null;
+    return currentUserData;
   },
 
   getUserInsights: async (): Promise<Insight[]> => {
