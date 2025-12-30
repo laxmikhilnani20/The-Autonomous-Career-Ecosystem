@@ -27,6 +27,9 @@ export const authService = {
       localStorage.setItem('aura_username', username);
       localStorage.setItem('aura_user', JSON.stringify(data.user));
       
+      // Clean up any duplicate insights in background
+      authService.cleanupDuplicates(username).catch(console.error);
+      
       return data.user;
     } catch (error) {
       console.error('Login error:', error);
@@ -247,4 +250,22 @@ async function fetchFreshInsights(username: string, cacheKey: string): Promise<I
     }
     return [];
   }
-}
+},
+
+  cleanupDuplicates: async (username: string): Promise<void> => {
+    try {
+      const response = await fetch(`${API_URL}/insights/cleanup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('🧹 Cleaned up duplicates:', data.deletedCount);
+      }
+    } catch (error) {
+      console.error('Cleanup error:', error);
+    }
+  }
+};
