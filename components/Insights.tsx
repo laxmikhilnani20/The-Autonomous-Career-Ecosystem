@@ -68,9 +68,18 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
             <Target className="w-8 h-8 text-slate-500" />
           </div>
           <h3 className="text-xl font-semibold text-slate-300 mb-2">No Insights Yet</h3>
-          <p className="text-slate-500 text-sm">
+          <p className="text-slate-500 text-sm mb-4">
             Upload your resume or share achievements to start receiving personalized insights
           </p>
+          <button
+            onClick={() => {
+              console.log('🔍 Debug - Current insights:', insights);
+              alert(`Insights count: ${insights.length}. Check browser console for details.`);
+            }}
+            className="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-sm hover:bg-slate-600 transition-colors"
+          >
+            Debug: Show Insights Data
+          </button>
         </div>
       </div>
     );

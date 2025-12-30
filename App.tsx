@@ -30,9 +30,13 @@ const App: React.FC = () => {
     const initializeApp = async () => {
       const user = authService.getCurrentUser();
       if (user) {
+        console.log('👤 User logged in:', user.username);
         setCurrentUser(user);
         const savedInsights = await authService.getUserInsights();
+        console.log('📊 Loaded insights:', savedInsights.length, savedInsights);
         setInsights(savedInsights);
+      } else {
+        console.log('❌ No user session found');
       }
       setIsLoading(false);
     };
