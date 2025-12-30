@@ -198,7 +198,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <div className="flex h-screen w-full overflow-hidden text-slate-200 font-sans selection:bg-emerald-500/30">
+    <div className="flex h-screen w-full overflow-hidden bg-gradient-to-br from-gray-100 via-gray-50 to-blue-50 text-gray-800 font-sans selection:bg-blue-200/30">
       
       {/* Sidebar (Left) - Collapsible */}
       <div className={`transition-all duration-300 ease-in-out ${
@@ -218,21 +218,15 @@ const App: React.FC = () => {
         {/* Toggle Sidebar Button */}
         <button
           onClick={() => setSidebarVisible(!sidebarVisible)}
-          className="absolute top-6 left-6 z-50 p-2.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/50 backdrop-blur-sm transition-all duration-200 shadow-lg hover:shadow-emerald-500/20 group"
+          className="absolute top-6 left-6 z-50 p-2.5 rounded-xl bg-gray-100 hover:bg-gray-200 transition-all duration-200 shadow-[4px_4px_12px_#bebebe,-4px_-4px_12px_#ffffff] hover:shadow-[6px_6px_16px_#bebebe,-6px_-6px_16px_#ffffff] group"
           title={sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}
         >
           {sidebarVisible ? (
-            <X className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+            <X className="w-5 h-5 text-gray-600 group-hover:text-blue-600 transition-colors" />
           ) : (
-            <Menu className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+            <Menu className="w-5 h-5 text-gray-600 group-hover:text-blue-600 transition-colors" />
           )}
         </button>
-        
-        {/* Background Mesh */}
-        <div className="fixed inset-0 pointer-events-none">
-             <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-indigo-600/10 blur-[150px]" />
-             <div className="absolute bottom-[-10%] right-[30%] w-[600px] h-[600px] bg-teal-600/5 blur-[120px]" />
-        </div>
 
         {/* Center: Dashboard */}
         <div className="flex-1 h-full overflow-y-auto overflow-x-hidden p-6 md:p-10 space-y-8 relative z-10 custom-scrollbar">
@@ -253,22 +247,22 @@ const App: React.FC = () => {
           <section className="flex-1 min-h-[500px] animate-in fade-in slide-in-from-bottom-4 duration-700 delay-200 flex flex-col">
             
             {/* Tab Headers */}
-            <div className="flex items-center gap-6 mb-4 border-b border-white/5 pb-2">
+            <div className="flex items-center gap-6 mb-4 border-b border-gray-200 pb-2">
                 <button 
                   onClick={() => setActiveTab('feed')}
-                  className={`flex items-center gap-2 pb-2 text-sm font-medium transition-all relative ${activeTab === 'feed' ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'}`}
+                  className={`flex items-center gap-2 pb-2 text-sm font-medium transition-all relative ${activeTab === 'feed' ? 'text-blue-600' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                     <Activity className="w-4 h-4" />
                     Live Feed
-                    {activeTab === 'feed' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-emerald-400 rounded-t-full" />}
+                    {activeTab === 'feed' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-blue-500 rounded-t-full" />}
                 </button>
                 <button 
                   onClick={() => setActiveTab('roadmap')}
-                  className={`flex items-center gap-2 pb-2 text-sm font-medium transition-all relative ${activeTab === 'roadmap' ? 'text-purple-400' : 'text-slate-500 hover:text-slate-300'}`}
+                  className={`flex items-center gap-2 pb-2 text-sm font-medium transition-all relative ${activeTab === 'roadmap' ? 'text-purple-600' : 'text-gray-500 hover:text-gray-700'}`}
                 >
                     <LayoutList className="w-4 h-4" />
                     Strategy Checklist
-                    {activeTab === 'roadmap' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-400 rounded-t-full" />}
+                    {activeTab === 'roadmap' && <span className="absolute bottom-0 left-0 w-full h-0.5 bg-purple-500 rounded-t-full" />}
                 </button>
             </div>
 
