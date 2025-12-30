@@ -12,11 +12,6 @@
 
 AURA (Autonomous Universal Resume Architect) is an intelligent career development platform that transforms professional growth into an interactive visual experience. Powered by Google's Gemini AI, AURA analyzes resumes, identifies skill gaps, and provides personalized roadmaps to help professionals reach their target roles. The application combines modern web technologies with artificial intelligence to create a unique "digital garden" approach to career development.
 
-<div align="center">
-<img src="https://via.placeholder.com/600x300/f5f5f5/333?text=AURA+Dashboard" alt="AURA Dashboard" width="500"/>
-<p><em>Figure 1: AURA Main Dashboard with Growth Garden Visualization</em></p>
-</div>
-
 ---
 
 ## 2. Problem Statement
@@ -65,11 +60,6 @@ AURA (Autonomous Universal Resume Architect) is an intelligent career developmen
 
 **5. Accessibility**: Premium career services are expensive. Free alternatives lack sophistication and personalization.
 
-<div align="center">
-<img src="https://via.placeholder.com/400x250/dbeafe/333?text=Growth+Garden+Visualization" alt="Growth Garden" width="350"/>
-<p><em>Figure 2: Unique Skill Tree Visualization Showing Career Growth Stages</em></p>
-</div>
-
 ---
 
 ## 4. Solution: AURA Platform
@@ -115,11 +105,6 @@ User Upload Resume → AI Analysis → Growth Metrics Calculated
 - Milestone tracking with progress bars
 - File upload for resumes and achievements
 - Tab-based filtering (Live Feed vs Strategy Checklist)
-
-<div align="center">
-<img src="https://via.placeholder.com/350x200/f3e8ff/333?text=AI+Insights+Feed" alt="AI Insights" width="300"/>
-<p><em>Figure 3: AI-Generated Insights with Actionable Recommendations</em></p>
-</div>
 
 ### 4.4 Technical Architecture
 
@@ -180,11 +165,6 @@ User Upload Resume → AI Analysis → Growth Metrics Calculated
 **Architecture**: Serverless, Cloud-native, AI-powered  
 **Security**: HTTPS, SSL database connections, environment variable protection  
 **Deployment**: Continuous deployment via GitHub → Vercel  
-
-<div align="center">
-<img src="https://via.placeholder.com/500x250/e0f2fe/333?text=System+Architecture+Diagram" alt="Architecture" width="450"/>
-<p><em>Figure 4: AURA System Architecture with AI Integration</em></p>
-</div>
 
 ---
 
