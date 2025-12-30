@@ -8,7 +8,7 @@ import Roadmap from './components/Roadmap';
 import Auth from './components/Auth';
 import ActionModal from './components/ActionModal';
 import { Insight, InsightStatus, UploadType, User } from './types';
-import { analyzeUploadAndGenerateInsight, generateActionPlan, generateInitialRoadmap } from './services/auraService';
+import { analyzeUploadAndGenerateInsight, generateActionPlan, generateInitialRoadmap, analyzeResumeMetrics } from './services/auraService';
 import { authService } from './services/authService';
 import { LayoutList, Activity } from 'lucide-react';
 
@@ -112,10 +112,13 @@ const App: React.FC = () => {
     try {
       console.log('🚀 Starting onboarding:', file.name, goal);
       
+      // 1. Analyze resume to get personalized metrics
+      const metrics = await analyzeResumeMetrics(file.name, goal);
+      
       await updateUserData({
         hasOnboarded: true,
-        growthLevel: 30,
-        readiness: 45,
+        growthLevel: metrics.growthLevel,
+        readiness: metrics.readiness,
         targetRole: goal
       });
       

@@ -17,6 +17,81 @@ const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
   return Promise.race([promise, timeout]);
 };
 
+// NEW: Analyze resume and determine initial metrics
+export const analyzeResumeMetrics = async (fileName: string, targetRole: string): Promise<{
+  growthLevel: number;
+  readiness: number;
+  phase: 'seedling' | 'blooming' | 'mature';
+}> => {
+  const ai = getClient();
+  const prompt = `
+    Analyze this career profile:
+    Resume File: "${fileName}"
+    Target Role: "${targetRole}"
+    
+    Based on the filename and target role, assess:
+    1. Growth Level (0-100): How developed is their career? 
+       - 0-30: Early career/student
+       - 31-60: Mid-level professional
+       - 61-100: Senior/expert level
+    
+    2. Career Readiness (0-100): How ready are they for the target role?
+       - 0-30: Many gaps to fill
+       - 31-60: Some experience, needs growth
+       - 61-100: Nearly ready or overqualified
+    
+    3. Phase: 
+       - "seedling": Early career, just starting
+       - "blooming": Actively developing skills
+       - "mature": Experienced professional
+    
+    JSON Schema:
+    {
+      "growthLevel": 45,
+      "readiness": 60,
+      "phase": "blooming"
+    }
+  `;
+
+  try {
+    console.log('🔍 Analyzing resume metrics...');
+    const response = await withTimeout(
+      ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: Type.OBJECT,
+            properties: {
+              growthLevel: { type: Type.NUMBER },
+              readiness: { type: Type.NUMBER },
+              phase: { type: Type.STRING }
+            }
+          }
+        }
+      }),
+      30000
+    );
+    
+    const data = JSON.parse(response.text || '{}');
+    console.log('✅ Metrics analyzed:', data);
+    return {
+      growthLevel: Math.min(100, Math.max(0, data.growthLevel || 30)),
+      readiness: Math.min(100, Math.max(0, data.readiness || 45)),
+      phase: data.phase || 'blooming'
+    };
+  } catch (error) {
+    console.error('❌ Metrics analysis failed:', error);
+    // Fallback to conservative defaults
+    return {
+      growthLevel: 30,
+      readiness: 45,
+      phase: 'blooming'
+    };
+  }
+};
+
 // NEW: specific function for the 2-step onboarding
 export const generateInitialRoadmap = async (fileName: string, targetRole: string): Promise<Insight[]> => {
   const ai = getClient();
