@@ -1,9 +1,9 @@
 # AURA - AI-Powered Career Growth Agent
 
-> **📌 Version: BASIC STABLE BUILD (v1.0)**  
-> **Status:** ✅ Working - All core features functional  
+> **📌 Version: v2.0 STABLE BUILD**  
+> **Status:** ✅ Working - All features functional with proper tab filtering  
 > **Last Updated:** December 30, 2025  
-> **Commit:** `e4281e8` - Stable baseline version with login-based sessions
+> **Commit:** `23b2e96` - Stable version with improved UX
 
 <div align="center">
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
@@ -13,13 +13,15 @@
 
 AURA is an AI-powered career ecosystem visualization where your professional growth is a digital garden. Track skills, set goals, and receive AI-generated insights to advance your career.
 
-**This is the basic working version** with core functionality:
+**Version 2.0 Features:**
 - ✅ User authentication (login required every session)
 - ✅ PostgreSQL database for data persistence
 - ✅ AI-powered resume analysis and insights
-- ✅ Personalized growth metrics
+- ✅ Personalized growth metrics based on your profile
 - ✅ Cross-device access (all data in cloud)
-- ✅ Mission-based skill tracking
+- ✅ **NEW:** Proper tab filtering - gaps in Strategy Checklist, wins in Live Feed
+- ✅ **NEW:** Smart insight categorization
+- ✅ Mission-based skill tracking with checklist
 
 ## 🚀 Quick Start
 
