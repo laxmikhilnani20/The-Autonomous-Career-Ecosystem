@@ -31,7 +31,10 @@ export default async function handler(req, res) {
 
     const userId = userResult.rows[0].id;
 
-    // Insert all insights
+    // DELETE all existing insights for this user first to prevent duplicates
+    await query('DELETE FROM insights WHERE user_id = $1', [userId]);
+
+    // Insert all insights fresh
     const insertedInsights = [];
     for (const insight of insights) {
       const result = await query(
