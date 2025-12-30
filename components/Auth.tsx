@@ -37,17 +37,15 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0B1120] flex items-center justify-center p-4">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-indigo-600/10 blur-[150px]" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-emerald-600/10 blur-[120px]" />
-      </div>
-
-      <div className="w-full max-w-md relative z-10">
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-100 via-gray-50 to-blue-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-md">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
-            <Sparkles className="w-8 h-8 text-emerald-400" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-purple-400 bg-clip-text text-transparent">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-400 to-purple-400 shadow-lg flex items-center justify-center">
+              <Sparkles className="w-7 h-7 text-white" />
+            </div>
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
               AURA
             </h1>
           </div>
