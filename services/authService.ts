@@ -31,6 +31,12 @@ export const authService = {
 
       const data = await response.json();
       currentUsername = username;
+      currentUserData = data.user;
+      
+      // Persist to localStorage
+      localStorage.setItem('aura_username', username);
+      localStorage.setItem('aura_user', JSON.stringify(data.user));
+      
       return data.user;
     } catch (error) {
       console.error('Login error:', error);
