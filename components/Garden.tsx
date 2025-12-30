@@ -81,21 +81,98 @@ const Garden: React.FC<GardenProps> = ({ growthLevel }) => {
           </div>
         </div>
 
-        {/* Visual Garden Display */}
-        <div className="mt-8 h-48 bg-slate-900/30 border border-white/10 rounded-xl p-6 flex items-end justify-center gap-2">
-          {/* Dynamic "plants" based on growth level */}
-          {Array.from({ length: Math.floor(growthLevel / 20) + 1 }).map((_, i) => (
-            <div
-              key={i}
-              className={`transition-all duration-500 ${state.color}`}
-              style={{
-                animation: `sway ${2 + i * 0.3}s ease-in-out infinite`,
-                animationDelay: `${i * 0.2}s`
-              }}
-            >
-              <Icon className={`w-${6 + i} h-${6 + i}`} />
+        {/* Visual Garden Display - Enhanced Hero Section */}
+        <div className="mt-8 h-72 bg-slate-900/30 border border-white/10 rounded-xl p-8 relative overflow-hidden">
+          {/* Ambient Glow Background */}
+          <div className={`absolute inset-0 ${state.bgColor} blur-2xl opacity-30 animate-pulse-slow`} />
+          
+          {/* Interconnected Plant Network */}
+          <div className="relative h-full flex items-center justify-center">
+            {/* Central Core Plant - Largest */}
+            <div className="absolute z-20 animate-float">
+              <div className={`relative ${state.color} drop-shadow-2xl`}>
+                <Icon className="w-32 h-32 animate-glow" />
+                {/* Glow ring around main plant */}
+                <div className={`absolute inset-0 ${state.bgColor} rounded-full blur-xl animate-pulse-slow`} />
+              </div>
             </div>
-          ))}
+
+            {/* Surrounding Satellite Plants - Based on Growth */}
+            {Array.from({ length: Math.min(Math.floor(growthLevel / 15) + 2, 8) }).map((_, i) => {
+              const angle = (360 / Math.min(Math.floor(growthLevel / 15) + 2, 8)) * i;
+              const radius = 80 + (i % 2) * 20;
+              const size = 12 + (i % 3) * 4;
+              
+              return (
+                <div
+                  key={i}
+                  className={`absolute ${state.color} opacity-80 animate-orbit`}
+                  style={{
+                    left: `calc(50% + ${Math.cos((angle * Math.PI) / 180) * radius}px)`,
+                    top: `calc(50% + ${Math.sin((angle * Math.PI) / 180) * radius}px)`,
+                    transform: 'translate(-50%, -50%)',
+                    animation: `orbit ${8 + i}s linear infinite, pulse-glow ${2 + i * 0.3}s ease-in-out infinite`,
+                    animationDelay: `${i * 0.3}s`
+                  }}
+                >
+                  <Icon className={`w-${size} h-${size}`} />
+                  {/* Individual plant glow */}
+                  <div className={`absolute inset-0 ${state.bgColor} rounded-full blur-md opacity-60`} />
+                </div>
+              );
+            })}
+
+            {/* Connecting Energy Lines */}
+            {growthLevel >= 40 && (
+              <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-30">
+                {Array.from({ length: Math.min(Math.floor(growthLevel / 20), 6) }).map((_, i) => {
+                  const angle = (360 / Math.min(Math.floor(growthLevel / 20), 6)) * i;
+                  const radius = 80;
+                  const x1 = 50;
+                  const y1 = 50;
+                  const x2 = 50 + Math.cos((angle * Math.PI) / 180) * radius / 2.5;
+                  const y2 = 50 + Math.sin((angle * Math.PI) / 180) * radius / 2.5;
+                  
+                  return (
+                    <line
+                      key={i}
+                      x1={`${x1}%`}
+                      y1={`${y1}%`}
+                      x2={`${x2}%`}
+                      y2={`${y2}%`}
+                      stroke="currentColor"
+                      strokeWidth="1"
+                      className={`${state.color} animate-pulse-slow`}
+                      strokeDasharray="4 4"
+                      style={{
+                        animation: `pulse-glow ${3 + i * 0.5}s ease-in-out infinite`,
+                        animationDelay: `${i * 0.2}s`
+                      }}
+                    />
+                  );
+                })}
+              </svg>
+            )}
+
+            {/* Particle Effects for High Growth */}
+            {growthLevel >= 60 && (
+              <>
+                {Array.from({ length: 12 }).map((_, i) => (
+                  <div
+                    key={`particle-${i}`}
+                    className={`absolute w-1 h-1 ${state.bgColor} rounded-full animate-float-particle`}
+                    style={{
+                      left: `${20 + Math.random() * 60}%`,
+                      top: `${20 + Math.random() * 60}%`,
+                      animation: `float-particle ${4 + Math.random() * 3}s ease-in-out infinite`,
+                      animationDelay: `${Math.random() * 2}s`,
+                      opacity: 0.6
+                    }}
+                  />
+                ))}
+              </>
+            )}
+          </div>
         </div>
       </div>
 
@@ -103,6 +180,56 @@ const Garden: React.FC<GardenProps> = ({ growthLevel }) => {
         @keyframes sway {
           0%, 100% { transform: rotate(-2deg); }
           50% { transform: rotate(2deg); }
+        }
+        
+        @keyframes float {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-10px); }
+        }
+        
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.3; }
+          50% { opacity: 0.6; }
+        }
+        
+        @keyframes glow {
+          0%, 100% { filter: drop-shadow(0 0 10px currentColor); }
+          50% { filter: drop-shadow(0 0 20px currentColor); }
+        }
+        
+        @keyframes pulse-glow {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.05); }
+        }
+        
+        @keyframes orbit {
+          from { transform: translate(-50%, -50%) rotate(0deg) translateX(5px) rotate(0deg); }
+          to { transform: translate(-50%, -50%) rotate(360deg) translateX(5px) rotate(-360deg); }
+        }
+        
+        @keyframes float-particle {
+          0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+          50% { transform: translate(10px, -15px) scale(1.2); opacity: 0.8; }
+        }
+        
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+        
+        .animate-pulse-slow {
+          animation: pulse-slow 4s ease-in-out infinite;
+        }
+        
+        .animate-glow {
+          animation: glow 3s ease-in-out infinite;
+        }
+        
+        .animate-orbit {
+          animation: orbit 8s linear infinite;
+        }
+        
+        .animate-float-particle {
+          animation: float-particle 5s ease-in-out infinite;
         }
       `}</style>
     </div>
