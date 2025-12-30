@@ -1,9 +1,9 @@
 # AURA - AI-Powered Career Growth Agent
 
-> **📌 Version: v3.0 STABLE BUILD**  
-> **Status:** ✅ Working - Premium UI with neumorphic design and enhanced visualizations  
+> **📌 Version: v4.0 STABLE BUILD**  
+> **Status:** ✅ Working - Complete neumorphic light design transformation  
 > **Last Updated:** December 30, 2025  
-> **Commit:** `e8da7b9` - Stable version with premium 2025 UI design
+> **Commit:** `06385c6` - Complete application redesigned with neumorphic aesthetic
 
 <div align="center">
 <img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
@@ -13,7 +13,12 @@
 
 AURA is an AI-powered career ecosystem visualization where your professional growth is a digital garden. Track skills, set goals, and receive AI-generated insights to advance your career.
 
-**Version 3.0 Features:**
+**Version 4.0 Features:**
+- ✅ **Complete neumorphic light design** across all components
+- ✅ Soft shadow system with depth and elevation
+- ✅ Blue/purple gradient color scheme
+- ✅ Light gray backgrounds with dark text for readability
+- ✅ Consistent card styling with rounded corners
 - ✅ User authentication (login required every session)
 - ✅ PostgreSQL database for data persistence
 - ✅ AI-powered resume analysis and insights
@@ -22,14 +27,19 @@ AURA is an AI-powered career ecosystem visualization where your professional gro
 - ✅ Proper tab filtering - gaps in Strategy Checklist, wins in Live Feed
 - ✅ Smart insight categorization
 - ✅ Mission-based skill tracking with checklist
-- ✨ **NEW:** Neumorphic light design on auth page with soft shadows
-- ✨ **NEW:** Ethereal deep tones with radial gradient background
-- ✨ **NEW:** Glassmorphism card surfaces with backdrop blur
-- ✨ **NEW:** Dynamic SVG Skill Tree with growth stages
-- ✨ **NEW:** Premium gradient progress bars (emerald-to-teal, amber-to-orange)
-- ✨ **NEW:** AI-brain message types (Diagnostic, Growth, Proactive)
-- ✨ **NEW:** Collapsible sidebar for better screen space
-- ✨ **NEW:** Automatic duplicate cleanup system
+- ✅ Dynamic SVG Skill Tree with growth stages
+- ✅ Premium gradient progress bars
+- ✅ AI-brain message types (Diagnostic, Growth, Proactive)
+- ✅ Collapsible sidebar for better screen space
+- ✅ Automatic duplicate cleanup system
+
+### v4.0 Design System
+- **Background:** `bg-gradient-to-br from-gray-100 via-gray-50 to-blue-50`
+- **Cards:** `bg-gray-100` with `shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]`
+- **Inset Elements:** `shadow-[inset_4px_4px_8px_#bebebe,inset_-4px_-4px_8px_#ffffff]`
+- **Hover States:** `hover:shadow-[6px_6px_16px_#bebebe,-6px_-6px_16px_#ffffff]`
+- **Primary Gradients:** `from-blue-400 to-purple-400`, `from-purple-500 to-blue-500`
+- **Typography:** `text-gray-800` (headings), `text-gray-600` (body)
 
 ## 🚀 Quick Start
 
