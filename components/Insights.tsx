@@ -67,11 +67,11 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center max-w-md">
-          <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <Target className="w-8 h-8 text-slate-500" />
+          <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 shadow-[4px_4px_12px_#bebebe,-4px_-4px_12px_#ffffff]">
+            <Target className="w-8 h-8 text-gray-500" />
           </div>
-          <h3 className="text-xl font-semibold text-slate-300 mb-2">No Activity Yet</h3>
-          <p className="text-slate-500 text-sm mb-4">
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">No Activity Yet</h3>
+          <p className="text-gray-600 text-sm mb-4">
             Share achievements or complete tasks to see your activity feed
           </p>
           <button
@@ -79,7 +79,7 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
               console.log('🔍 Debug - Feed insights:', feedInsights);
               alert(`Feed insights count: ${feedInsights.length}. Check browser console for details.`);
             }}
-            className="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-sm hover:bg-slate-600 transition-colors"
+            className="px-4 py-2 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-xl text-sm hover:from-blue-500 hover:to-purple-500 transition-colors shadow-lg"
           >
             Debug: Show Insights Data
           </button>
@@ -98,13 +98,13 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
           <div
             key={insight.id}
             onClick={() => onSelectInsight(insight)}
-            className={`bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl p-4 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-emerald-500/20 ${
+            className={`bg-gray-100 rounded-2xl p-4 cursor-pointer transition-all hover:shadow-[6px_6px_16px_#bebebe,-6px_-6px_16px_#ffffff] shadow-[4px_4px_12px_#bebebe,-4px_-4px_12px_#ffffff] ${
               insight.status === 'completed' ? 'opacity-60' : ''
             }`}
           >
             <div className="flex items-start gap-3">
-              <div className={`${style.bgColor} border ${style.borderColor} rounded-lg p-2 flex-shrink-0`}>
-                <Icon className={`w-5 h-5 ${style.iconColor}`} />
+              <div className="bg-gradient-to-br from-blue-400 to-purple-400 rounded-xl p-2 flex-shrink-0 shadow-lg">
+                <Icon className="w-5 h-5 text-white" />
               </div>
 
               <div className="flex-1 min-w-0">
@@ -112,43 +112,43 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
                 <div className="flex items-start justify-between gap-2 mb-2">
                   <div className="flex items-center gap-2">
                     {insight.type === 'gap' && (
-                      <span className="text-[10px] font-bold uppercase tracking-wide text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/30">
+                      <span className="text-[10px] font-bold uppercase tracking-wide text-purple-600 bg-purple-100 px-2 py-0.5 rounded-lg shadow-sm">
                         🔍 Diagnostic
                       </span>
                     )}
                     {insight.type === 'success' && (
-                      <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">
+                      <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-lg shadow-sm">
                         📈 Growth
                       </span>
                     )}
                     {insight.type === 'actionable' && (
-                      <span className="text-[10px] font-bold uppercase tracking-wide text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/30">
+                      <span className="text-[10px] font-bold uppercase tracking-wide text-blue-600 bg-blue-100 px-2 py-0.5 rounded-lg shadow-sm">
                         💡 Proactive
                       </span>
                     )}
                   </div>
                   {insight.status === 'completed' && (
-                    <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                    <CheckCircle className="w-5 h-5 text-emerald-500 flex-shrink-0" />
                   )}
                 </div>
 
-                <h4 className={`font-semibold text-slate-200 mb-1 ${insight.status === 'completed' ? 'line-through' : ''}`}>
+                <h4 className={`font-semibold text-gray-800 mb-1 ${insight.status === 'completed' ? 'line-through' : ''}`}>
                   {insight.title}
                 </h4>
 
-                <p className="text-sm text-slate-400 mb-2 line-clamp-2">
+                <p className="text-sm text-gray-600 mb-2 line-clamp-2">
                   {insight.description}
                 </p>
 
                 {insight.missionTitle && (
                   <div className="mb-2">
-                    <span className={`text-xs font-medium ${style.accentColor} bg-slate-900/30 px-2 py-1 rounded`}>
+                    <span className="text-xs font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded-lg shadow-sm">
                       {insight.missionTitle}
                     </span>
                   </div>
                 )}
 
-                <div className="flex items-center justify-between text-xs text-slate-500">
+                <div className="flex items-center justify-between text-xs text-gray-500">
                   <span className="opacity-60">{formatTimestamp(insight.timestamp)}</span>
                 </div>
               </div>
