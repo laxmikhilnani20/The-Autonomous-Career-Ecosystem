@@ -52,37 +52,34 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0B1120] flex items-center justify-center p-4">
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] right-[-5%] w-[800px] h-[800px] bg-indigo-600/10 blur-[150px]" />
-        <div className="absolute bottom-[-10%] left-[-5%] w-[600px] h-[600px] bg-emerald-600/10 blur-[120px]" />
-      </div>
-
+    <div className="min-h-screen w-full bg-gradient-to-br from-gray-100 via-gray-50 to-blue-50 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl relative z-10">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-emerald-400 to-purple-400 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-500 to-purple-500 bg-clip-text text-transparent">
             Welcome to AURA
           </h1>
-          <p className="text-slate-400">Let's set up your career growth journey</p>
+          <p className="text-gray-600">Let's set up your career growth journey</p>
         </div>
 
         <div className="flex items-center justify-center gap-4 mb-8">
-          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${step >= 1 ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-400'}`}>
+          <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${step >= 1 ? 'bg-gradient-to-r from-blue-400 to-purple-400 text-white shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]' : 'bg-gray-200 text-gray-400 shadow-[inset_2px_2px_4px_#bebebe,inset_-2px_-2px_4px_#ffffff]'}`}>
             1
           </div>
-          <div className={`h-1 w-20 ${step >= 2 ? 'bg-emerald-500' : 'bg-slate-700'}`} />
-          <div className={`flex items-center justify-center w-10 h-10 rounded-full ${step >= 2 ? 'bg-emerald-500 text-white' : 'bg-slate-700 text-slate-400'}`}>
+          <div className={`h-1 w-20 rounded-full ${step >= 2 ? 'bg-gradient-to-r from-blue-400 to-purple-400' : 'bg-gray-300'}`} />
+          <div className={`flex items-center justify-center w-10 h-10 rounded-full font-semibold ${step >= 2 ? 'bg-gradient-to-r from-blue-400 to-purple-400 text-white shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]' : 'bg-gray-200 text-gray-400 shadow-[inset_2px_2px_4px_#bebebe,inset_-2px_-2px_4px_#ffffff]'}`}>
             2
           </div>
         </div>
 
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-gray-100 rounded-2xl p-8 shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]">
           {step === 1 && (
             <div className="space-y-6">
               <div className="text-center mb-6">
-                <Upload className="w-12 h-12 text-emerald-400 mx-auto mb-3" />
-                <h2 className="text-2xl font-semibold text-slate-200 mb-2">Upload Your Resume</h2>
-                <p className="text-slate-400 text-sm">We'll analyze it to understand your current position</p>
+                <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]">
+                  <Upload className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">Upload Your Resume</h2>
+                <p className="text-gray-600 text-sm">We'll analyze it to understand your current position</p>
               </div>
 
               <div
@@ -91,10 +88,10 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                 onDrop={handleDrop}
                 className={`border-2 border-dashed rounded-xl p-12 text-center transition-all cursor-pointer ${
                   isDragging
-                    ? 'border-emerald-500 bg-emerald-500/10'
+                    ? 'border-purple-400 bg-purple-50'
                     : file
-                    ? 'border-emerald-500/50 bg-emerald-500/5'
-                    : 'border-white/20 hover:border-white/40 bg-slate-800/30'
+                    ? 'border-blue-400 bg-blue-50'
+                    : 'border-gray-300 hover:border-gray-400 bg-gray-50 hover:bg-gray-100'
                 }`}
               >
                 <input
@@ -107,15 +104,17 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                 <label htmlFor="resume-upload" className="cursor-pointer">
                   {file ? (
                     <div className="space-y-3">
-                      <FileText className="w-16 h-16 text-emerald-400 mx-auto" />
-                      <p className="text-emerald-400 font-medium">{file.name}</p>
-                      <p className="text-slate-500 text-sm">Click or drag to replace</p>
+                      <div className="w-16 h-16 bg-gradient-to-r from-blue-400 to-purple-400 rounded-xl flex items-center justify-center mx-auto">
+                        <FileText className="w-8 h-8 text-white" />
+                      </div>
+                      <p className="text-blue-600 font-medium">{file.name}</p>
+                      <p className="text-gray-500 text-sm">Click or drag to replace</p>
                     </div>
                   ) : (
                     <div className="space-y-3">
-                      <Upload className="w-16 h-16 text-slate-400 mx-auto" />
-                      <p className="text-slate-300">Drag & drop your resume here</p>
-                      <p className="text-slate-500 text-sm">or click to browse</p>
+                      <Upload className="w-16 h-16 text-gray-400 mx-auto" />
+                      <p className="text-gray-700 font-medium">Drag & drop your resume here</p>
+                      <p className="text-gray-500 text-sm">or click to browse</p>
                     </div>
                   )}
                 </label>
@@ -124,7 +123,7 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
               <button
                 onClick={handleNext}
                 disabled={!file}
-                className="w-full bg-gradient-to-r from-emerald-500 to-purple-500 hover:from-emerald-600 hover:to-purple-600 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-medium py-3 rounded-lg transition-all shadow-lg hover:shadow-emerald-500/25 flex items-center justify-center gap-2"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all shadow-[6px_6px_12px_#bebebe,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_12px_#bebebe,-4px_-4px_12px_#ffffff] flex items-center justify-center gap-2"
               >
                 Next Step
                 <ArrowRight className="w-5 h-5" />
@@ -135,13 +134,15 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
           {step === 2 && (
             <div className="space-y-6">
               <div className="text-center mb-6">
-                <Target className="w-12 h-12 text-purple-400 mx-auto mb-3" />
-                <h2 className="text-2xl font-semibold text-slate-200 mb-2">Set Your North Star</h2>
-                <p className="text-slate-400 text-sm">What role are you aiming for?</p>
+                <div className="w-16 h-16 bg-gradient-to-r from-purple-400 to-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]">
+                  <Target className="w-8 h-8 text-white" />
+                </div>
+                <h2 className="text-2xl font-semibold text-gray-800 mb-2">Set Your North Star</h2>
+                <p className="text-gray-600 text-sm">What role are you aiming for?</p>
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
                   Target Role
                 </label>
                 <input
@@ -149,16 +150,18 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                   value={goal}
                   onChange={(e) => setGoal(e.target.value)}
                   placeholder="e.g., Senior Software Engineer, Product Manager..."
-                  className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-3 px-4 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all"
+                  className="w-full bg-gray-50 border-2 border-gray-200 rounded-xl py-3 px-4 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-purple-400 transition-all shadow-[inset_2px_2px_4px_#bebebe,inset_-2px_-2px_4px_#ffffff]"
                 />
               </div>
 
               {file && (
-                <div className="bg-slate-800/30 border border-white/10 rounded-lg p-4 flex items-center gap-3">
-                  <FileText className="w-5 h-5 text-emerald-400 flex-shrink-0" />
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-center gap-3">
+                  <div className="w-10 h-10 bg-gradient-to-r from-blue-400 to-purple-400 rounded-lg flex items-center justify-center flex-shrink-0">
+                    <FileText className="w-5 h-5 text-white" />
+                  </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-slate-300 text-sm font-medium truncate">{file.name}</p>
-                    <p className="text-slate-500 text-xs">Resume uploaded</p>
+                    <p className="text-gray-800 text-sm font-medium truncate">{file.name}</p>
+                    <p className="text-gray-600 text-xs">Resume uploaded</p>
                   </div>
                 </div>
               )}
@@ -167,14 +170,14 @@ const Onboarding: React.FC<OnboardingProps> = ({ onComplete }) => {
                 <button
                   onClick={() => setStep(1)}
                   disabled={isProcessing}
-                  className="px-6 py-3 border border-white/20 text-slate-300 rounded-lg hover:bg-white/5 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-6 py-3 border-2 border-gray-300 text-gray-700 font-medium rounded-xl hover:bg-gray-50 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleComplete}
                   disabled={!goal.trim() || isProcessing}
-                  className="flex-1 bg-gradient-to-r from-purple-500 to-emerald-500 hover:from-purple-600 hover:to-emerald-600 disabled:from-slate-700 disabled:to-slate-700 disabled:cursor-not-allowed text-white font-medium py-3 rounded-lg transition-all shadow-lg hover:shadow-purple-500/25 flex items-center justify-center gap-2"
+                  className="flex-1 bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 disabled:from-gray-300 disabled:to-gray-400 disabled:cursor-not-allowed text-white font-medium py-3 rounded-xl transition-all shadow-[6px_6px_12px_#bebebe,-6px_-6px_12px_#ffffff] hover:shadow-[4px_4px_12px_#bebebe,-4px_-4px_12px_#ffffff] flex items-center justify-center gap-2"
                 >
                   {isProcessing ? (
                     <>
