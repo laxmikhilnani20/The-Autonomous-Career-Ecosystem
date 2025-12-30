@@ -92,7 +92,7 @@ DATABASE_URL=your_postgres_connection_url_here
 ```
 
 Get your credentials from:
-- **Gemini API Key:** [Google AI Studio](https://aistudio.google.com/apikey)
+- **Gemini API Key:** Your Gemini API key
 - **Database URL:** Your Aiven PostgreSQL dashboard
 
 ## 🚀 What Changed

@@ -10,7 +10,7 @@ Add these two variables:
 
 | Name | Value |
 |------|-------|
-| `GEMINI_API_KEY` | Your Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey) |
+| `GEMINI_API_KEY` | Your Gemini API key |
 | `DATABASE_URL` | Your PostgreSQL connection URL from Aiven |
 
 **Important:** After adding, click **"Redeploy"** to apply the changes.

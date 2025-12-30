@@ -290,9 +290,7 @@ AURA/
 ### Getting API Keys
 
 **Gemini API Key:**
-1. Visit [Google AI Studio](https://makersuite.google.com/app/apikey)
-2. Create a new API key
-3. Copy and add to environment variables
+Obtain your Gemini API key and add it to environment variables.
 
 **PostgreSQL Database:**
 1. Sign up at [Aiven](https://aiven.io) (free tier available)
