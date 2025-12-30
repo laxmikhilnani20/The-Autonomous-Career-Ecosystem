@@ -98,7 +98,7 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
           <div
             key={insight.id}
             onClick={() => onSelectInsight(insight)}
-            className={`${style.bgColor} border ${style.borderColor} rounded-xl p-4 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-lg ${
+            className={`bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-xl p-4 cursor-pointer transition-all hover:scale-[1.02] hover:shadow-emerald-500/20 ${
               insight.status === 'completed' ? 'opacity-60' : ''
             }`}
           >

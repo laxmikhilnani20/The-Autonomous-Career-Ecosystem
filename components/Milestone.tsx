@@ -52,7 +52,7 @@ const Milestone: React.FC<MilestoneProps> = ({ onSetGoal, readiness }) => {
   const state = getReadinessState();
 
   return (
-    <div className={`h-full bg-slate-800/30 backdrop-blur-sm border ${state.borderColor} rounded-2xl p-6 relative overflow-hidden`}>
+    <div className="h-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-6 relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute inset-0 opacity-20">
         <div className={`absolute top-0 right-0 w-1/2 h-1/2 ${state.bgColor} blur-3xl`} />
