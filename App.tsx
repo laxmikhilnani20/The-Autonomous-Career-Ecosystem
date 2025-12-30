@@ -109,49 +109,67 @@ const App: React.FC = () => {
 
   // Onboarding: Generate Roadmap and Save IMMEDIATELY
   const handleOnboardingComplete = async (file: File, goal: string) => {
-    await updateUserData({
-      hasOnboarded: true,
-      growthLevel: 30,
-      readiness: 45,
-      targetRole: goal
-    });
-    
-    // 2. Generate specific roadmap based on file + goal
-    const initialChecklist = await generateInitialRoadmap(file.name, goal);
-    
-    // 3. Persist immediately
-    await updateInsights(initialChecklist);
-    
-    // 4. Switch to Roadmap tab to show the "pointers" immediately
-    setActiveTab('roadmap');
+    try {
+      console.log('🚀 Starting onboarding:', file.name, goal);
+      
+      await updateUserData({
+        hasOnboarded: true,
+        growthLevel: 30,
+        readiness: 45,
+        targetRole: goal
+      });
+      
+      // 2. Generate specific roadmap based on file + goal
+      const initialChecklist = await generateInitialRoadmap(file.name, goal);
+      
+      // 3. Persist immediately
+      await updateInsights(initialChecklist);
+      
+      console.log('✅ Onboarding complete');
+      
+      // 4. Switch to Roadmap tab to show the "pointers" immediately
+      setActiveTab('roadmap');
+    } catch (error) {
+      console.error('❌ Onboarding failed:', error);
+      alert(`Onboarding failed: ${error instanceof Error ? error.message : 'Unknown error'}. Please try again.`);
+    }
   };
 
   const handleFileUpload = async (type: UploadType, file: File) => {
     if (!currentUser) return;
     setIsProcessing(true);
     
-    // Simulate scanning
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      console.log('📤 Processing upload:', file.name);
+      
+      // Simulate scanning
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-    const newInsight = await analyzeUploadAndGenerateInsight(type, file.name);
+      const newInsight = await analyzeUploadAndGenerateInsight(type, file.name);
+      
+      // Prepend new insight and save (FIX: define before using)
+      const updatedList = [newInsight, ...insights];
+      await updateInsights(updatedList);
     
-    // Prepend new insight and save
-    await updateInsights(updatedList);
-    const updatedList = [newInsight, ...insights];
-    
-    if (type === UploadType.RESUME) {
-        const newGrowth = Math.min(currentUser.growthLevel + 10, 60);
-        const newReadiness = Math.min(currentUser.readiness + 5, 60);
-        await updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
-        setActiveTab('roadmap'); // Switch to roadmap to show new gaps
-    } else {
-        const newGrowth = Math.min(currentUser.growthLevel + 15, 100);
-        const newReadiness = Math.min(currentUser.readiness + 12, 100);
-        await updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
-        setActiveTab('feed'); // Show success in feed
+      if (type === UploadType.RESUME) {
+          const newGrowth = Math.min(currentUser.growthLevel + 10, 60);
+          const newReadiness = Math.min(currentUser.readiness + 5, 60);
+          await updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
+          setActiveTab('roadmap'); // Switch to roadmap to show new gaps
+      } else {
+          const newGrowth = Math.min(currentUser.growthLevel + 15, 100);
+          const newReadiness = Math.min(currentUser.readiness + 12, 100);
+          await updateUserData({ growthLevel: newGrowth, readiness: newReadiness });
+          setActiveTab('feed'); // Show success in feed
+      }
+      
+      console.log('✅ Upload processed successfully');
+    } catch (error) {
+      console.error('❌ Upload failed:', error);
+      alert(`Upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsProcessing(false);
     }
-    
-    setIsProcessing(false);
   };
 
   const handleSetGoal = async (goal: string) => {

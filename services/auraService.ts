@@ -9,6 +9,14 @@ const getClient = () => {
   return new GoogleGenAI({ apiKey: apiKey || 'dummy-key-for-ui-demo' });
 };
 
+// Helper: Add timeout to Promise
+const withTimeout = <T>(promise: Promise<T>, ms: number): Promise<T> => {
+  const timeout = new Promise<T>((_, reject) => 
+    setTimeout(() => reject(new Error(`Request timeout after ${ms}ms`)), ms)
+  );
+  return Promise.race([promise, timeout]);
+};
+
 // NEW: specific function for the 2-step onboarding
 export const generateInitialRoadmap = async (fileName: string, targetRole: string): Promise<Insight[]> => {
   const ai = getClient();
@@ -34,29 +42,38 @@ export const generateInitialRoadmap = async (fileName: string, targetRole: strin
   `;
 
   try {
-     const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
-      contents: prompt,
-      config: {
-        responseMimeType: 'application/json',
-        responseSchema: {
-          type: Type.ARRAY,
-          items: {
-            type: Type.OBJECT,
-            properties: {
-              title: { type: Type.STRING },
-              description: { type: Type.STRING },
-              missionTitle: { type: Type.STRING },
-              missionBrief: { type: Type.STRING },
-              actionContent: { type: Type.STRING }
+    console.log('🤖 Calling Gemini API...');
+    const response = await withTimeout(
+      ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+            type: Type.ARRAY,
+            items: {
+              type: Type.OBJECT,
+              properties: {
+                title: { type: Type.STRING },
+                description: { type: Type.STRING },
+                missionTitle: { type: Type.STRING },
+                missionBrief: { type: Type.STRING },
+                actionContent: { type: Type.STRING }
+              }
             }
           }
         }
-      }
-    });
+      }),
+      30000 // 30 second timeout
+    );
     
+    console.log('✅ Gemini response received');
     const text = response.text;
-    if (!text) return [];
+    if (!text) {
+      console.warn('⚠️ Empty response from Gemini');
+      throw new Error('Empty response from AI');
+    }'❌ Gemini API Error:', e);
+    alert(`AI processing failed: ${e instanceof Error ? e.message : 'Unknown error'}. Using fallback data.`
     const data = JSON.parse(text);
 
     return data.map((item: any) => ({
@@ -110,25 +127,30 @@ export const analyzeUploadAndGenerateInsight = async (
   
   const prompt = `
     User uploaded "${fileName}" to "${uploadType}".
-    Generate a gamified Insight card.
-    
-    If 'resume': Identify a gap.
-    If 'achievement': Identify a success.
-    
-    JSON Schema:
-    {
-      "title": "Title",
-      "description": "Description",
-      "type": "${uploadType === 'resume' ? 'gap' : 'success'}",
-      "missionTitle": "Mission Name (nullable)",
-      "missionBrief": "Specific instructions on what to do next (nullable)",
-      "actionContent": "Draft post"
-    }
-  `;
+    Geneole.log('🤖 Analyzing upload:', fileName);
+    const response = await withTimeout(
+      ai.models.generateContent({
+        model: 'gemini-3-flash-preview',
+        contents: prompt,
+        config: {
+          responseMimeType: 'application/json',
+          responseSchema: {
+              type: Type.OBJECT,
+              properties: {
+                title: { type: Type.STRING },
+                description: { type: Type.STRING },
+                type: { type: Type.STRING },
+                missionTitle: { type: Type.STRING, nullable: true },
+                missionBrief: { type: Type.STRING, nullable: true },
+                actionContent: { type: Type.STRING }
+              }
+          }
+        }
+      }),
+      30000 // 30 second timeout
+    );
 
-  try {
-    const response = await ai.models.generateContent({
-      model: 'gemini-3-flash-preview',
+    console.log('✅ Analysis complete');      model: 'gemini-3-flash-preview',
       contents: prompt,
       config: {
         responseMimeType: 'application/json',
@@ -153,6 +175,8 @@ export const analyzeUploadAndGenerateInsight = async (
       title: data.title,
       description: data.description,
       status: 'active',
+    console.error('❌ Upload analysis failed:', error);
+    alert(`AI analysis failed: ${error instanceof Error ? error.message : 'Unknown error'}. Using placeholder.`);
       missionTitle: data.missionTitle,
       missionBrief: data.missionBrief,
       actionContent: data.actionContent,
