@@ -108,46 +108,6 @@ export const authService = {
     // No cache, fetch from API (with timeout)
     return fetchFreshInsights(currentUsername, cacheKey);
   },
-};
-
-// Helper: Fetch from API with timeout
-async function fetchFreshInsights(username: string, cacheKey: string): Promise<Insight[]> {
-  try {
-    console.log('🌐 Fetching fresh insights from API...');
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
-    
-    const response = await fetch(`${API_URL}/insights/${username}`, {
-      signal: controller.signal
-    });
-    clearTimeout(timeoutId);
-    
-    if (!response.ok) {
-      console.warn('API returned non-OK status:', response.status);
-      return [];
-    }
-
-    const data = await response.json();
-    const insights = data.insights.map((insight: any) => ({
-      ...insight,
-      timestamp: new Date(insight.timestamp)
-    }));
-    
-    // Update cache
-    localStorage.setItem(cacheKey, JSON.stringify(insights));
-    console.log('✅ Fresh insights loaded:', insights.length);
-    
-    return insights;
-  } catch (error) {
-    if (error instanceof Error && error.name === 'AbortError') {
-      console.error('❌ API timeout - database might not be initialized');
-      alert('Loading insights timed out. Database might not be initialized. Visit /api/init');
-    } else {
-      console.error('❌ Error fetching insights:', error);
-    }
-    return [];
-  }
-}
 
   updateProgress: async (
     growthLevel: number,
@@ -244,3 +204,41 @@ async function fetchFreshInsights(username: string, cacheKey: string): Promise<I
   }
 };
 
+// Helper: Fetch from API with timeout
+async function fetchFreshInsights(username: string, cacheKey: string): Promise<Insight[]> {
+  try {
+    console.log('🌐 Fetching fresh insights from API...');
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s timeout
+    
+    const response = await fetch(`${API_URL}/insights/${username}`, {
+      signal: controller.signal
+    });
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) {
+      console.warn('API returned non-OK status:', response.status);
+      return [];
+    }
+
+    const data = await response.json();
+    const insights = data.insights.map((insight: any) => ({
+      ...insight,
+      timestamp: new Date(insight.timestamp)
+    }));
+    
+    // Update cache
+    localStorage.setItem(cacheKey, JSON.stringify(insights));
+    console.log('✅ Fresh insights loaded:', insights.length);
+    
+    return insights;
+  } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      console.error('❌ API timeout - database might not be initialized');
+      alert('Loading insights timed out. Database might not be initialized. Visit /api/init');
+    } else {
+      console.error('❌ Error fetching insights:', error);
+    }
+    return [];
+  }
+}
