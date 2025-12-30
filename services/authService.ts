@@ -117,6 +117,20 @@ export const authService = {
   ): Promise<void> => {
     if (!currentUsername) return;
 
+    // Update in-memory user data
+    if (currentUserData) {
+      currentUserData = {
+        ...currentUserData,
+        growthLevel,
+        readiness,
+        hasOnboarded,
+        targetRole: targetRole || currentUserData.targetRole
+      };
+      // Update localStorage immediately
+      localStorage.setItem('aura_user', JSON.stringify(currentUserData));
+      console.log('💾 Updated user data in localStorage:', currentUserData);
+    }
+
     try {
       await fetch(`${API_URL}/auth/progress`, {
         method: 'PUT',
