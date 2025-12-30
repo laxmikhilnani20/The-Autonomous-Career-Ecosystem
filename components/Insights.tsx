@@ -8,6 +8,9 @@ interface InsightsProps {
 }
 
 const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
+  // Filter out gap-type insights (those belong in Roadmap/Strategy Checklist)
+  const feedInsights = insights.filter(i => i.type !== 'gap');
+  
   const getInsightStyle = (type: string) => {
     switch (type) {
       case 'success':
@@ -60,21 +63,21 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
     return date.toLocaleDateString();
   };
 
-  if (insights.length === 0) {
+  if (feedInsights.length === 0) {
     return (
       <div className="h-full flex items-center justify-center">
         <div className="text-center max-w-md">
           <div className="w-16 h-16 bg-slate-800/50 rounded-full flex items-center justify-center mx-auto mb-4">
             <Target className="w-8 h-8 text-slate-500" />
           </div>
-          <h3 className="text-xl font-semibold text-slate-300 mb-2">No Insights Yet</h3>
+          <h3 className="text-xl font-semibold text-slate-300 mb-2">No Activity Yet</h3>
           <p className="text-slate-500 text-sm mb-4">
-            Upload your resume or share achievements to start receiving personalized insights
+            Share achievements or complete tasks to see your activity feed
           </p>
           <button
             onClick={() => {
-              console.log('🔍 Debug - Current insights:', insights);
-              alert(`Insights count: ${insights.length}. Check browser console for details.`);
+              console.log('🔍 Debug - Feed insights:', feedInsights);
+              alert(`Feed insights count: ${feedInsights.length}. Check browser console for details.`);
             }}
             className="px-4 py-2 bg-slate-700 text-slate-300 rounded-lg text-sm hover:bg-slate-600 transition-colors"
           >
@@ -87,7 +90,7 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
 
   return (
     <div className="h-full overflow-y-auto custom-scrollbar pr-2 space-y-3">
-      {insights.map((insight) => {
+      {feedInsights.map((insight) => {
         const style = getInsightStyle(insight.type);
         const Icon = style.icon;
 
