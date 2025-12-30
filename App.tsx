@@ -10,7 +10,7 @@ import ActionModal from './components/ActionModal';
 import { Insight, InsightStatus, UploadType, User } from './types';
 import { analyzeUploadAndGenerateInsight, generateActionPlan, generateInitialRoadmap, analyzeResumeMetrics } from './services/auraService';
 import { authService } from './services/authService';
-import { LayoutList, Activity } from 'lucide-react';
+import { LayoutList, Activity, Menu, X } from 'lucide-react';
 
 const App: React.FC = () => {
   // Application State
@@ -21,6 +21,7 @@ const App: React.FC = () => {
   const [insights, setInsights] = useState<Insight[]>([]);
   const [isProcessing, setIsProcessing] = useState(false);
   const [activeTab, setActiveTab] = useState<'feed' | 'roadmap'>('feed');
+  const [sidebarVisible, setSidebarVisible] = useState(true);
   
   // Modal State (Lifted Up)
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
@@ -199,16 +200,33 @@ const App: React.FC = () => {
   return (
     <div className="flex h-screen w-full bg-[#0B1120] overflow-hidden text-slate-200 font-sans selection:bg-emerald-500/30">
       
-      {/* Sidebar (Left) */}
-      <Sidebar 
-        user={currentUser}
-        onFileUpload={handleFileUpload} 
-        isProcessing={isProcessing} 
-        onLogout={handleLogout}
-      />
+      {/* Sidebar (Left) - Collapsible */}
+      <div className={`transition-all duration-300 ease-in-out ${
+        sidebarVisible ? 'w-80' : 'w-0'
+      } overflow-hidden`}>
+        <Sidebar 
+          user={currentUser}
+          onFileUpload={handleFileUpload} 
+          isProcessing={isProcessing} 
+          onLogout={handleLogout}
+        />
+      </div>
 
       {/* Main Content Area */}
       <main className="flex-1 h-full overflow-hidden relative flex flex-col">
+        
+        {/* Toggle Sidebar Button */}
+        <button
+          onClick={() => setSidebarVisible(!sidebarVisible)}
+          className="absolute top-6 left-6 z-50 p-2.5 rounded-lg bg-slate-800/80 hover:bg-slate-700/80 border border-slate-700/50 backdrop-blur-sm transition-all duration-200 shadow-lg hover:shadow-emerald-500/20 group"
+          title={sidebarVisible ? 'Hide sidebar' : 'Show sidebar'}
+        >
+          {sidebarVisible ? (
+            <X className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+          ) : (
+            <Menu className="w-5 h-5 text-slate-400 group-hover:text-emerald-400 transition-colors" />
+          )}
+        </button>
         
         {/* Background Mesh */}
         <div className="fixed inset-0 pointer-events-none">
