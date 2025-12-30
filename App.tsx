@@ -118,6 +118,7 @@ const App: React.FC = () => {
       
       // 1. Analyze resume to get personalized metrics
       const metrics = await analyzeResumeMetrics(file.name, goal);
+      console.log('📊 Metrics analyzed:', metrics);
       
       await updateUserData({
         hasOnboarded: true,
@@ -125,6 +126,9 @@ const App: React.FC = () => {
         readiness: metrics.readiness,
         targetRole: goal
       });
+      
+      console.log('💾 User data updated. Current user:', currentUser);
+      console.log('💾 localStorage aura_user:', localStorage.getItem('aura_user'));
       
       // 2. Generate specific roadmap based on file + goal
       const initialChecklist = await generateInitialRoadmap(file.name, goal);

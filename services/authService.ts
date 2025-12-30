@@ -8,12 +8,16 @@ let currentUserData: User | null = null;
 
 // Initialize user data from localStorage on module load
 const storedUser = localStorage.getItem('aura_user');
+console.log('🔄 AuthService module loaded. Stored user:', storedUser);
 if (storedUser) {
   try {
     currentUserData = JSON.parse(storedUser);
+    console.log('✅ Initialized user from localStorage:', currentUserData);
   } catch (e) {
-    console.error('Failed to parse stored user data');
+    console.error('❌ Failed to parse stored user data');
   }
+} else {
+  console.log('ℹ️ No stored user found in localStorage');
 }
 
 export const authService = {
