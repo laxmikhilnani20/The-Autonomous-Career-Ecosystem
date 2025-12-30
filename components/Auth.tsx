@@ -46,30 +46,29 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
             </div>
           </div>
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
-              AURA
-            </h1>
-          </div>
-          <p className="text-slate-400 text-sm">Your AI-powered career growth companion</p>
+            AURA
+          </h1>
+          <p className="text-gray-600 text-sm font-medium">Your AI-powered career growth companion</p>
         </div>
 
-        <div className="bg-slate-900/50 backdrop-blur-sm border border-white/10 rounded-2xl p-8 shadow-2xl">
+        <div className="bg-gray-100 rounded-3xl p-8 shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]">
           <div className="flex gap-2 mb-6">
             <button
               onClick={() => setIsLogin(true)}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+              className={`flex-1 py-2 px-4 rounded-xl font-medium transition-all ${
                 isLogin
-                  ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30'
-                  : 'text-slate-400 hover:text-slate-300'
+                  ? 'bg-gray-100 text-blue-600 shadow-[inset_4px_4px_8px_#bebebe,inset_-4px_-4px_8px_#ffffff]'
+                  : 'text-gray-500 hover:text-gray-700 shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]'
               }`}
             >
               Login
             </button>
             <button
               onClick={() => setIsLogin(false)}
-              className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+              className={`flex-1 py-2 px-4 rounded-xl font-medium transition-all ${
                 !isLogin
-                  ? 'bg-purple-500/20 text-purple-400 border border-purple-500/30'
-                  : 'text-slate-400 hover:text-slate-300'
+                  ? 'bg-gray-100 text-purple-600 shadow-[inset_4px_4px_8px_#bebebe,inset_-4px_-4px_8px_#ffffff]'
+                  : 'text-gray-500 hover:text-gray-700 shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]'
               }`}
             >
               Sign Up
@@ -78,46 +77,46 @@ const Auth: React.FC<AuthProps> = ({ onLogin, onSignup }) => {
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Username
               </label>
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="text"
                   value={username}
                   onChange={(e) => setUsername(e.target.value)}
-                  className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-3 pl-11 pr-4 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
+                  className="w-full bg-gray-100 rounded-xl py-3 pl-11 pr-4 text-gray-800 placeholder-gray-400 focus:outline-none shadow-[inset_4px_4px_8px_#bebebe,inset_-4px_-4px_8px_#ffffff] transition-all"
                   placeholder="Enter username"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-slate-300 mb-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Password
               </label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-500" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-800/50 border border-white/10 rounded-lg py-3 pl-11 pr-4 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500/50 transition-all"
+                  className="w-full bg-gray-100 rounded-xl py-3 pl-11 pr-4 text-gray-800 placeholder-gray-400 focus:outline-none shadow-[inset_4px_4px_8px_#bebebe,inset_-4px_-4px_8px_#ffffff] transition-all"
                   placeholder="Enter password"
                 />
               </div>
             </div>
 
             {error && (
-              <div className="text-red-400 text-sm bg-red-500/10 border border-red-500/20 rounded-lg p-3">
+              <div className="text-red-600 text-sm bg-red-50 rounded-xl p-3 shadow-[inset_2px_2px_4px_rgba(239,68,68,0.1)]">
                 {error}
               </div>
             )}
 
             <button
               type="submit"
-              className="w-full bg-gradient-to-r from-emerald-500 to-purple-500 hover:from-emerald-600 hover:to-purple-600 text-white font-medium py-3 rounded-lg transition-all shadow-lg hover:shadow-emerald-500/25"
+              className="w-full bg-gradient-to-r from-blue-400 to-purple-400 hover:from-blue-500 hover:to-purple-500 text-white font-semibold py-3 rounded-xl transition-all shadow-[4px_4px_12px_#bebebe,-4px_-4px_12px_#ffffff] hover:shadow-[6px_6px_16px_#bebebe,-6px_-6px_16px_#ffffff] active:shadow-[inset_4px_4px_12px_#bebebe,inset_-4px_-4px_12px_#ffffff]"
             >
               {isLogin ? 'Login' : 'Create Account'}
             </button>
