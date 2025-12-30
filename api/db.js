@@ -19,6 +19,13 @@ export const getPool = () => {
   return pool;
 };
 
+export const resetPool = async () => {
+  if (pool) {
+    await pool.end();
+    pool = null;
+  }
+};
+
 export const query = async (text, params) => {
   const pool = getPool();
   try {

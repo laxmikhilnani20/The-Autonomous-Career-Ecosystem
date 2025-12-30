@@ -1,4 +1,4 @@
-import { query } from './db.js';
+import { query, resetPool } from './db.js';
 import fs from 'fs';
 import path from 'path';
 
@@ -78,9 +78,12 @@ export default async function handler(req, res) {
           FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
     `);
     
+    // Reset connection pool to clear schema cache
+    await resetPool();
+    
     res.json({ 
       success: true, 
-      message: 'Database schema initialized successfully' 
+      message: 'Database schema initialized successfully. Connection pool reset.' 
     });
   } catch (error) {
     console.error('Init DB error:', error);
