@@ -172,10 +172,32 @@ export const authService = {
   saveInsights: async (insights: Insight[]): Promise<void> => {
     if (!currentUsername) return;
 
+    // CRITICAL: Deduplicate by title+type before saving
+    const uniqueInsights = insights.reduce((acc, insight) => {
+      const key = `${insight.title}|${insight.type}`;
+      const existing = acc.find(i => `${i.title}|${i.type}` === key);
+      
+      // Keep the newest version if duplicate exists
+      if (!existing) {
+        acc.push(insight);
+      } else {
+        const existingTime = new Date(existing.timestamp).getTime();
+        const currentTime = new Date(insight.timestamp).getTime();
+        if (currentTime > existingTime) {
+          // Replace with newer version
+          const index = acc.indexOf(existing);
+          acc[index] = insight;
+        }
+      }
+      return acc;
+    }, [] as Insight[]);
+
+    console.log(`💾 Deduplicating: ${insights.length} → ${uniqueInsights.length} unique insights`);
+
     // Update cache immediately for instant access
     const cacheKey = `aura_insights_${currentUsername}`;
-    localStorage.setItem(cacheKey, JSON.stringify(insights));
-    console.log('💾 Cached insights locally:', insights.length);
+    localStorage.setItem(cacheKey, JSON.stringify(uniqueInsights));
+    console.log('💾 Cached insights locally:', uniqueInsights.length);
 
     try {
       await fetch(`${API_URL}/insights/bulk`, {
@@ -183,7 +205,7 @@ export const authService = {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           username: currentUsername,
-          insights: insights.map(insight => ({
+          insights: uniqueInsights.map(insight => ({
             type: insight.type,
             title: insight.title,
             description: insight.description,
@@ -195,6 +217,7 @@ export const authService = {
           }))
         })
       });
+      console.log('✅ Insights saved to database (deduplicated)');
     } catch (error) {
       console.error('Save insights error:', error);
     }
@@ -231,16 +254,37 @@ async function fetchFreshInsights(username: string, cacheKey: string): Promise<I
     }
 
     const data = await response.json();
-    const insights = data.insights.map((insight: any) => ({
+    const rawInsights = data.insights.map((insight: any) => ({
       ...insight,
       timestamp: new Date(insight.timestamp)
     }));
     
-    // Update cache
-    localStorage.setItem(cacheKey, JSON.stringify(insights));
-    console.log('✅ Fresh insights loaded:', insights.length);
+    // CRITICAL: Deduplicate insights by title+type (keep newest)
+    const uniqueInsights = rawInsights.reduce((acc: Insight[], insight: Insight) => {
+      const key = `${insight.title}|${insight.type}`;
+      const existing = acc.find((i: Insight) => `${i.title}|${i.type}` === key);
+      
+      if (!existing) {
+        acc.push(insight);
+      } else {
+        const existingTime = new Date(existing.timestamp).getTime();
+        const currentTime = new Date(insight.timestamp).getTime();
+        if (currentTime > existingTime) {
+          // Replace with newer version
+          const index = acc.indexOf(existing);
+          acc[index] = insight;
+        }
+      }
+      return acc;
+    }, []);
     
-    return insights;
+    console.log(`🧹 Deduplication: ${rawInsights.length} → ${uniqueInsights.length} unique insights`);
+    
+    // Update cache with deduplicated data
+    localStorage.setItem(cacheKey, JSON.stringify(uniqueInsights));
+    console.log('✅ Fresh insights loaded:', uniqueInsights.length);
+    
+    return uniqueInsights;
   } catch (error) {
     if (error instanceof Error && error.name === 'AbortError') {
       console.error('❌ API timeout - database might not be initialized');
