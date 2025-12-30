@@ -36,31 +36,31 @@ const ActionModal: React.FC<ActionModalProps> = ({ isOpen, onClose, insight, onU
     switch (insight.type) {
       case 'success':
         return {
-          bg: 'bg-emerald-500/10',
-          border: 'border-emerald-500/30',
-          text: 'text-emerald-400',
-          button: 'from-emerald-500 to-emerald-600'
+          bg: 'bg-emerald-100',
+          border: 'border-emerald-300',
+          text: 'text-emerald-700',
+          button: 'from-emerald-400 to-emerald-500'
         };
       case 'gap':
         return {
-          bg: 'bg-purple-500/10',
-          border: 'border-purple-500/30',
-          text: 'text-purple-400',
-          button: 'from-purple-500 to-purple-600'
+          bg: 'bg-purple-100',
+          border: 'border-purple-300',
+          text: 'text-purple-700',
+          button: 'from-purple-400 to-purple-500'
         };
       case 'actionable':
         return {
-          bg: 'bg-blue-500/10',
-          border: 'border-blue-500/30',
-          text: 'text-blue-400',
-          button: 'from-blue-500 to-blue-600'
+          bg: 'bg-blue-100',
+          border: 'border-blue-300',
+          text: 'text-blue-700',
+          button: 'from-blue-400 to-blue-500'
         };
       default:
         return {
-          bg: 'bg-slate-500/10',
-          border: 'border-slate-500/30',
-          text: 'text-slate-400',
-          button: 'from-slate-500 to-slate-600'
+          bg: 'bg-gray-100',
+          border: 'border-gray-300',
+          text: 'text-gray-700',
+          button: 'from-gray-400 to-gray-500'
         };
     }
   };
@@ -68,9 +68,9 @@ const ActionModal: React.FC<ActionModalProps> = ({ isOpen, onClose, insight, onU
   const colors = getTypeColor();
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
       <div
-        className="bg-slate-900 border border-white/10 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-2xl"
+        className="bg-gray-100 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden shadow-[12px_12px_24px_#bebebe,-12px_-12px_24px_#ffffff]"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
@@ -82,18 +82,18 @@ const ActionModal: React.FC<ActionModalProps> = ({ isOpen, onClose, insight, onU
                   {insight.type}
                 </span>
                 {insight.status === 'completed' && (
-                  <span className="text-xs bg-emerald-500/20 text-emerald-400 px-2 py-1 rounded font-medium">
+                  <span className="text-xs bg-emerald-200 text-emerald-700 px-2 py-1 rounded font-medium">
                     ✓ Completed
                   </span>
                 )}
               </div>
-              <h2 className="text-2xl font-bold text-slate-200">{insight.title}</h2>
+              <h2 className="text-2xl font-bold text-gray-800">{insight.title}</h2>
             </div>
             <button
               onClick={onClose}
-              className="p-2 hover:bg-white/10 rounded-lg transition-colors"
+              className="p-2 hover:bg-white/50 rounded-lg transition-colors"
             >
-              <X className="w-5 h-5 text-slate-400" />
+              <X className="w-5 h-5 text-gray-600" />
             </button>
           </div>
         </div>
@@ -102,20 +102,20 @@ const ActionModal: React.FC<ActionModalProps> = ({ isOpen, onClose, insight, onU
         <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)] custom-scrollbar space-y-6">
           {/* Description */}
           <div>
-            <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">
+            <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-2">
               Overview
             </h3>
-            <p className="text-slate-300 leading-relaxed">{insight.description}</p>
+            <p className="text-gray-700 leading-relaxed">{insight.description}</p>
           </div>
 
           {/* Mission Brief */}
           {insight.missionBrief && (
             <div>
-              <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-2">
+              <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider mb-2">
                 {insight.missionTitle || 'Action Plan'}
               </h3>
-              <div className={`${colors.bg} border ${colors.border} rounded-lg p-4`}>
-                <p className="text-slate-300 whitespace-pre-wrap leading-relaxed">
+              <div className={`${colors.bg} border ${colors.border} rounded-xl p-4 shadow-[inset_2px_2px_4px_#bebebe,inset_-2px_-2px_4px_#ffffff]`}>
+                <p className="text-gray-700 whitespace-pre-wrap leading-relaxed">
                   {insight.missionBrief}
                 </p>
               </div>
@@ -126,17 +126,17 @@ const ActionModal: React.FC<ActionModalProps> = ({ isOpen, onClose, insight, onU
           {insight.actionContent && (
             <div>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider">
+                <h3 className="text-sm font-semibold text-gray-600 uppercase tracking-wider">
                   Share on LinkedIn
                 </h3>
                 <button
                   onClick={handleCopyPost}
-                  className="flex items-center gap-1.5 text-xs text-slate-400 hover:text-slate-300 transition-colors"
+                  className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-800 transition-colors"
                 >
                   {copied ? (
                     <>
-                      <Check className="w-4 h-4 text-emerald-400" />
-                      <span className="text-emerald-400">Copied!</span>
+                      <Check className="w-4 h-4 text-emerald-600" />
+                      <span className="text-emerald-600">Copied!</span>
                     </>
                   ) : (
                     <>
@@ -146,8 +146,8 @@ const ActionModal: React.FC<ActionModalProps> = ({ isOpen, onClose, insight, onU
                   )}
                 </button>
               </div>
-              <div className="bg-slate-800/50 border border-white/10 rounded-lg p-4">
-                <p className="text-slate-300 whitespace-pre-wrap text-sm leading-relaxed">
+              <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 shadow-[inset_2px_2px_4px_#bebebe,inset_-2px_-2px_4px_#ffffff]">
+                <p className="text-gray-700 whitespace-pre-wrap text-sm leading-relaxed">
                   {insight.actionContent}
                 </p>
               </div>
@@ -156,18 +156,18 @@ const ActionModal: React.FC<ActionModalProps> = ({ isOpen, onClose, insight, onU
         </div>
 
         {/* Footer Actions */}
-        <div className="border-t border-white/10 p-6 flex gap-3">
+        <div className="border-t border-gray-200 p-6 flex gap-3 bg-gray-50">
           {insight.status !== 'completed' ? (
             <>
               <button
                 onClick={onClose}
-                className="px-6 py-2.5 border border-white/20 text-slate-300 rounded-lg hover:bg-white/5 transition-all font-medium"
+                className="px-6 py-2.5 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition-all font-medium shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]"
               >
                 Close
               </button>
               <button
                 onClick={handleComplete}
-                className={`flex-1 bg-gradient-to-r ${colors.button} hover:opacity-90 text-white font-medium py-2.5 rounded-lg transition-all shadow-lg flex items-center justify-center gap-2`}
+                className={`flex-1 bg-gradient-to-r ${colors.button} hover:opacity-90 text-white font-medium py-2.5 rounded-xl transition-all shadow-[6px_6px_12px_#bebebe,-6px_-6px_12px_#ffffff] flex items-center justify-center gap-2`}
               >
                 <CheckCircle className="w-5 h-5" />
                 Mark as Complete
@@ -177,13 +177,13 @@ const ActionModal: React.FC<ActionModalProps> = ({ isOpen, onClose, insight, onU
             <>
               <button
                 onClick={onClose}
-                className="flex-1 px-6 py-2.5 border border-white/20 text-slate-300 rounded-lg hover:bg-white/5 transition-all font-medium"
+                className="flex-1 px-6 py-2.5 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition-all font-medium shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]"
               >
                 Close
               </button>
               <button
                 onClick={handleUndo}
-                className="px-6 py-2.5 bg-slate-700 hover:bg-slate-600 text-slate-300 rounded-lg transition-all font-medium flex items-center gap-2"
+                className="px-6 py-2.5 bg-gray-400 hover:bg-gray-500 text-white rounded-xl transition-all font-medium flex items-center gap-2 shadow-[4px_4px_8px_#bebebe,-4px_-4px_8px_#ffffff]"
               >
                 <RotateCcw className="w-4 h-4" />
                 Undo
