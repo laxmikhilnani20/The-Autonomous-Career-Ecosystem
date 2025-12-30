@@ -2,9 +2,9 @@ import { GoogleGenAI, Type } from "@google/genai";
 import { Insight } from "../types";
 
 const getClient = () => {
-  const apiKey = process.env.API_KEY;
+  const apiKey = process.env.API_KEY || process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    console.warn("API Key not found in process.env.API_KEY");
+    console.warn("⚠️ Gemini API Key not configured. AI features will return mock data.");
   }
   return new GoogleGenAI({ apiKey: apiKey || 'dummy-key-for-ui-demo' });
 };
