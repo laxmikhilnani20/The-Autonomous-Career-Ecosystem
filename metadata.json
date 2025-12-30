@@ -1,5 +1,6 @@
 {
   "name": "AURA - Career Growth Agent",
-  "description": "An AI-powered career ecosystem visualization where your professional growth is a digital garden.",
+  "version": "4.0.0",
+  "description": "An AI-powered career ecosystem visualization where your professional growth is a digital garden. Now with complete neumorphic light design.",
   "requestFramePermissions": []
 }
