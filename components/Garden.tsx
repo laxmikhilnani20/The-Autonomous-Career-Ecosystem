@@ -69,13 +69,7 @@ const Garden: React.FC<GardenProps> = ({ growthLevel }) => {
           </div>
           <div className="w-full h-3 bg-slate-900/50 rounded-full overflow-hidden border border-white/10">
             <div
-              className={`h-full bg-gradient-to-r ${
-                growthLevel < 30
-                  ? 'from-green-500 to-green-400'
-                  : growthLevel < 70
-                  ? 'from-emerald-500 to-emerald-400'
-                  : 'from-teal-500 to-teal-400'
-              } transition-all duration-1000 ease-out`}
+              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-1000 ease-out shadow-lg shadow-emerald-500/30"
               style={{ width: `${growthLevel}%` }}
             />
           </div>

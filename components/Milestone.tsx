@@ -109,7 +109,7 @@ const Milestone: React.FC<MilestoneProps> = ({ onSetGoal, readiness }) => {
           <div className="relative">
             <div className="w-full h-4 bg-slate-900/50 rounded-full overflow-hidden border border-white/10">
               <div
-                className={`h-full bg-gradient-to-r ${state.barColor} transition-all duration-1000 ease-out relative`}
+                className="h-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-1000 ease-out relative shadow-lg shadow-amber-500/30"
                 style={{ width: `${readiness}%` }}
               >
                 <div className="absolute inset-0 bg-white/20 animate-pulse" />

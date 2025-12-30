@@ -108,14 +108,33 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
               </div>
 
               <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-2 mb-1">
-                  <h4 className={`font-semibold text-slate-200 ${insight.status === 'completed' ? 'line-through' : ''}`}>
-                    {insight.title}
-                  </h4>
+                {/* AI Message Type Badge */}
+                <div className="flex items-start justify-between gap-2 mb-2">
+                  <div className="flex items-center gap-2">
+                    {insight.type === 'gap' && (
+                      <span className="text-[10px] font-bold uppercase tracking-wide text-purple-400 bg-purple-500/10 px-2 py-0.5 rounded border border-purple-500/30">
+                        🔍 Diagnostic
+                      </span>
+                    )}
+                    {insight.type === 'success' && (
+                      <span className="text-[10px] font-bold uppercase tracking-wide text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30">
+                        📈 Growth
+                      </span>
+                    )}
+                    {insight.type === 'actionable' && (
+                      <span className="text-[10px] font-bold uppercase tracking-wide text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/30">
+                        💡 Proactive
+                      </span>
+                    )}
+                  </div>
                   {insight.status === 'completed' && (
                     <CheckCircle className="w-5 h-5 text-emerald-400 flex-shrink-0" />
                   )}
                 </div>
+
+                <h4 className={`font-semibold text-slate-200 mb-1 ${insight.status === 'completed' ? 'line-through' : ''}`}>
+                  {insight.title}
+                </h4>
 
                 <p className="text-sm text-slate-400 mb-2 line-clamp-2">
                   {insight.description}
@@ -130,8 +149,7 @@ const Insights: React.FC<InsightsProps> = ({ insights, onSelectInsight }) => {
                 )}
 
                 <div className="flex items-center justify-between text-xs text-slate-500">
-                  <span className="capitalize">{insight.type}</span>
-                  <span>{formatTimestamp(insight.timestamp)}</span>
+                  <span className="opacity-60">{formatTimestamp(insight.timestamp)}</span>
                 </div>
               </div>
             </div>
