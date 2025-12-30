@@ -41,44 +41,37 @@ const Garden: React.FC<GardenProps> = ({ growthLevel }) => {
   const Icon = state.icon;
 
   return (
-    <div className="h-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-6 relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute inset-0 opacity-20">
-        <div className={`absolute bottom-0 left-0 w-full h-1/2 ${state.bgColor} blur-3xl`} />
-      </div>
-
+    <div className="h-full bg-gray-100 rounded-3xl p-6 relative overflow-hidden shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]">
       <div className="relative z-10">
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">
+            <h3 className="text-sm font-medium text-gray-600 uppercase tracking-wider mb-1">
               Your Garden
             </h3>
-            <p className="text-2xl font-bold text-slate-200">{state.title}</p>
-            <p className="text-sm text-slate-400 mt-1">{state.description}</p>
+            <p className="text-2xl font-bold text-gray-800">{state.title}</p>
+            <p className="text-sm text-gray-600 mt-1">{state.description}</p>
           </div>
-          <div className={`${state.bgColor} ${state.borderColor} border rounded-xl p-3`}>
-            <Icon className={`w-8 h-8 ${state.color}`} />
+          <div className="bg-gradient-to-br from-blue-400 to-purple-400 rounded-2xl p-3 shadow-lg">
+            <Icon className="w-8 h-8 text-white" />
           </div>
         </div>
 
         {/* Progress Bar */}
         <div className="space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-slate-400">Growth Level</span>
-            <span className={`font-semibold ${state.color}`}>{growthLevel}%</span>
+            <span className="text-gray-600">Growth Level</span>
+            <span className="font-semibold text-blue-600">{growthLevel}%</span>
           </div>
-          <div className="w-full h-3 bg-slate-900/50 rounded-full overflow-hidden border border-white/10">
+          <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden shadow-[inset_2px_2px_4px_#bebebe]">
             <div
-              className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 transition-all duration-1000 ease-out shadow-lg shadow-emerald-500/30"
+              className="h-full bg-gradient-to-r from-blue-400 to-purple-400 transition-all duration-1000 ease-out"
               style={{ width: `${growthLevel}%` }}
             />
           </div>
         </div>
 
         {/* Dynamic Skill Tree Ecosystem */}
-        <div className="mt-8 h-72 bg-slate-900/30 border border-white/10 rounded-xl p-8 relative overflow-hidden">
-          {/* Ambient Glow Background */}
-          <div className={`absolute inset-0 ${state.bgColor} blur-2xl opacity-30 animate-pulse-slow`} />
+        <div className="mt-8 h-72 bg-gray-100 rounded-2xl p-8 relative overflow-hidden shadow-[inset_4px_4px_8px_#bebebe,inset_-4px_-4px_8px_#ffffff]">
           
           {/* SVG Skill Tree */}
           <div className="relative h-full flex items-center justify-center">

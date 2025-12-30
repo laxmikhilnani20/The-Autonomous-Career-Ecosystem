@@ -52,26 +52,21 @@ const Milestone: React.FC<MilestoneProps> = ({ onSetGoal, readiness }) => {
   const state = getReadinessState();
 
   return (
-    <div className="h-full bg-white/5 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-6 relative overflow-hidden">
-      {/* Background Decoration */}
-      <div className="absolute inset-0 opacity-20">
-        <div className={`absolute top-0 right-0 w-1/2 h-1/2 ${state.bgColor} blur-3xl`} />
-      </div>
-
+    <div className="h-full bg-gray-100 rounded-3xl p-6 relative overflow-hidden shadow-[8px_8px_16px_#bebebe,-8px_-8px_16px_#ffffff]">
       <div className="relative z-10 h-full flex flex-col">
         <div className="flex items-start justify-between mb-6">
           <div className="flex-1">
-            <h3 className="text-sm font-medium text-slate-400 uppercase tracking-wider mb-1">
+            <h3 className="text-sm font-medium text-gray-600 uppercase tracking-wider mb-1">
               North Star Goal
             </h3>
             {!isEditing ? (
               <div className="flex items-center gap-2 group">
-                <p className="text-2xl font-bold text-slate-200">Set Your Target</p>
+                <p className="text-2xl font-bold text-gray-800">Set Your Target</p>
                 <button
                   onClick={() => setIsEditing(true)}
-                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-white/10 rounded-lg"
+                  className="opacity-0 group-hover:opacity-100 transition-opacity p-1.5 hover:bg-gray-200 rounded-lg"
                 >
-                  <Edit2 className="w-4 h-4 text-slate-400" />
+                  <Edit2 className="w-4 h-4 text-gray-600" />
                 </button>
               </div>
             ) : (
@@ -81,51 +76,51 @@ const Milestone: React.FC<MilestoneProps> = ({ onSetGoal, readiness }) => {
                   value={newGoal}
                   onChange={(e) => setNewGoal(e.target.value)}
                   placeholder="e.g., Senior Product Manager"
-                  className="flex-1 bg-slate-900/50 border border-white/10 rounded-lg py-2 px-3 text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-purple-500/50 text-sm"
+                  className="flex-1 bg-gray-100 rounded-xl py-2 px-3 text-gray-800 placeholder-gray-500 focus:outline-none shadow-[inset_4px_4px_8px_#bebebe,inset_-4px_-4px_8px_#ffffff] text-sm"
                   autoFocus
                 />
                 <button
                   onClick={handleSubmit}
                   disabled={!newGoal.trim() || isSubmitting}
-                  className={`px-3 py-2 ${state.bgColor} ${state.color} border ${state.borderColor} rounded-lg hover:bg-opacity-20 transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className="px-3 py-2 bg-gradient-to-r from-blue-400 to-purple-400 text-white rounded-xl hover:from-blue-500 hover:to-purple-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
                 >
                   <Check className="w-4 h-4" />
                 </button>
               </div>
             )}
           </div>
-          <div className={`${state.bgColor} ${state.borderColor} border rounded-xl p-3`}>
-            <Target className={`w-8 h-8 ${state.color}`} />
+          <div className="bg-gradient-to-br from-purple-400 to-pink-400 rounded-2xl p-3 shadow-lg">
+            <Target className="w-8 h-8 text-white" />
           </div>
         </div>
 
         {/* Readiness Meter */}
         <div className="flex-1 flex flex-col justify-center space-y-4">
           <div className="flex items-center gap-2">
-            <TrendingUp className={`w-5 h-5 ${state.color}`} />
-            <span className="text-sm font-medium text-slate-400">Career Readiness</span>
+            <TrendingUp className="w-5 h-5 text-purple-600" />
+            <span className="text-sm font-medium text-gray-600">Career Readiness</span>
           </div>
 
           <div className="relative">
-            <div className="w-full h-4 bg-slate-900/50 rounded-full overflow-hidden border border-white/10">
+            <div className="w-full h-4 bg-gray-200 rounded-full overflow-hidden shadow-[inset_2px_2px_4px_#bebebe]">
               <div
-                className="h-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-1000 ease-out relative shadow-lg shadow-amber-500/30"
+                className="h-full bg-gradient-to-r from-amber-400 to-orange-500 transition-all duration-1000 ease-out relative"
                 style={{ width: `${readiness}%` }}
               >
                 <div className="absolute inset-0 bg-white/20 animate-pulse" />
               </div>
             </div>
             <div
-              className={`absolute top-1/2 -translate-y-1/2 ${state.color} font-bold text-sm`}
+              className="absolute top-1/2 -translate-y-1/2 text-orange-600 font-bold text-sm"
               style={{ left: `${Math.max(readiness - 5, 5)}%` }}
             >
               {readiness}%
             </div>
           </div>
 
-          <div className={`${state.bgColor} ${state.borderColor} border rounded-lg p-4`}>
-            <p className={`text-sm font-semibold ${state.color} mb-1`}>{state.label}</p>
-            <p className="text-xs text-slate-400">
+          <div className="bg-gray-100 rounded-2xl p-4 shadow-[inset_2px_2px_4px_#bebebe]">
+            <p className="text-sm font-semibold text-purple-600 mb-1">{state.label}</p>
+            <p className="text-xs text-gray-600">
               {readiness < 40 && 'Keep building your foundation. Complete tasks to increase readiness.'}
               {readiness >= 40 && readiness < 70 && 'You\'re making great progress! Stay consistent.'}
               {readiness >= 70 && 'You\'re well-prepared! Consider applying to target roles.'}
@@ -135,10 +130,10 @@ const Milestone: React.FC<MilestoneProps> = ({ onSetGoal, readiness }) => {
 
         {/* Quick Action Hint */}
         {!isEditing && (
-          <div className="mt-4 pt-4 border-t border-white/10">
+          <div className="mt-4 pt-4 border-t border-gray-200">
             <button
               onClick={() => setIsEditing(true)}
-              className="w-full py-2.5 bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-400 rounded-lg transition-all text-sm font-medium"
+              className="w-full py-2.5 bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 text-white rounded-xl transition-all text-sm font-medium shadow-[4px_4px_12px_#bebebe,-4px_-4px_12px_#ffffff]"
             >
               Update North Star
             </button>
