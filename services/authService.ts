@@ -2,23 +2,9 @@ import { User, Insight } from '../types';
 
 const API_URL = '/api';
 
-// Store current user in memory AND localStorage for persistence
-let currentUsername: string | null = localStorage.getItem('aura_username');
+// Store current user in memory only - NO auto-login from localStorage
+let currentUsername: string | null = null;
 let currentUserData: User | null = null;
-
-// Initialize user data from localStorage on module load
-const storedUser = localStorage.getItem('aura_user');
-console.log('🔄 AuthService module loaded. Stored user:', storedUser);
-if (storedUser) {
-  try {
-    currentUserData = JSON.parse(storedUser);
-    console.log('✅ Initialized user from localStorage:', currentUserData);
-  } catch (e) {
-    console.error('❌ Failed to parse stored user data');
-  }
-} else {
-  console.log('ℹ️ No stored user found in localStorage');
-}
 
 export const authService = {
   login: async (username: string, password: string): Promise<User | null> => {
@@ -78,8 +64,12 @@ export const authService = {
   logout: () => {
     currentUsername = null;
     currentUserData = null;
-    localStorage.removeItem('aura_username');
-    localStorage.removeItem('aura_user');
+    // Clear insights cache
+    Object.keys(localStorage).forEach(key => {
+      if (key.startsWith('aura_insights_')) {
+        localStorage.removeItem(key);
+      }
+    });
   },
 
   getCurrentUser: (): User | null => {
@@ -130,9 +120,7 @@ export const authService = {
         hasOnboarded,
         targetRole: targetRole || currentUserData.targetRole
       };
-      // Update localStorage immediately
-      localStorage.setItem('aura_user', JSON.stringify(currentUserData));
-      console.log('💾 Updated user data in localStorage:', currentUserData);
+      console.log('💾 Updated user data in memory:', currentUserData);
     }
 
     try {

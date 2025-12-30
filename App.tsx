@@ -25,22 +25,10 @@ const App: React.FC = () => {
   // Modal State (Lifted Up)
   const [selectedInsight, setSelectedInsight] = useState<Insight | null>(null);
 
-  // Initialize: Check for active session AND load persisted insights
+  // Initialize: Always show login screen (no auto-login)
   useEffect(() => {
-    const initializeApp = async () => {
-      const user = authService.getCurrentUser();
-      if (user) {
-        console.log('👤 User logged in:', user.username);
-        setCurrentUser(user);
-        const savedInsights = await authService.getUserInsights();
-        console.log('📊 Loaded insights:', savedInsights.length, savedInsights);
-        setInsights(savedInsights);
-      } else {
-        console.log('❌ No user session found');
-      }
-      setIsLoading(false);
-    };
-    initializeApp();
+    console.log('🚀 App initialized - login required');
+    setIsLoading(false);
   }, []);
 
   // Helper to sync state and DB
