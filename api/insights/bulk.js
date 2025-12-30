@@ -34,20 +34,9 @@ export default async function handler(req, res) {
     // DELETE all existing insights for this user first to prevent duplicates
     await query('DELETE FROM insights WHERE user_id = $1', [userId]);
 
-    // CRITICAL: Deduplicate insights by title+type on server side too
-    const uniqueInsights = insights.reduce((acc, insight) => {
-      const key = `${insight.title}|${insight.type}`;
-      if (!acc.some(i => `${i.title}|${i.type}` === key)) {
-        acc.push(insight);
-      }
-      return acc;
-    }, []);
-
-    console.log(`🧹 Server deduplication: ${insights.length} → ${uniqueInsights.length} unique insights`);
-
-    // Insert all unique insights fresh
+    // Insert all insights fresh
     const insertedInsights = [];
-    for (const insight of uniqueInsights) {
+    for (const insight of insights) {
       const result = await query(
         'INSERT INTO insights (user_id, type, title, description, status, mission_title, mission_brief, action_content, timestamp) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *',
         [

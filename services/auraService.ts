@@ -96,31 +96,23 @@ export const analyzeResumeMetrics = async (fileName: string, targetRole: string)
 export const generateInitialRoadmap = async (fileName: string, targetRole: string): Promise<Insight[]> => {
   const ai = getClient();
   const prompt = `
-    Context: User is onboarding to AURA with career goal: "${targetRole}".
+    Context: User is onboarding to AURA.
     Resume File: "${fileName}"
+    Target Goal: "${targetRole}"
 
-    Task: Generate a COMPLETE STRATEGIC ROADMAP with 5-7 detailed action items (gaps) that the user must complete to reach their target role.
+    Task: Generate 3 distinct "Gap" insights that serve as a checklist for the user to reach the Target Goal based on the Resume.
     
-    Cover these categories (generate 1-2 items per category):
-    1. Technical Skills - Specific technologies, frameworks, or tools they need to learn
-    2. Soft Skills/Leadership - Communication, management, or strategic thinking gaps
-    3. Projects/Portfolio - Hands-on work they should build to demonstrate expertise
-    4. Certifications/Education - Professional credentials or courses needed
-    5. Networking/Visibility - LinkedIn presence, community involvement, or personal brand building
-    
-    Requirements:
-    - Each item should be ACTIONABLE and SPECIFIC
-    - Mission Brief must include step-by-step instructions (numbered list)
-    - Make it comprehensive so completing ALL items = 100% readiness for the role
-    - Arrange items in logical order (foundational skills first, advanced last)
+    1. A technical skill gap (GAP).
+    2. A strategic/soft skill gap (GAP).
+    3. A certification or proof-of-work gap (GAP).
 
-    JSON Schema for the Array (5-7 items):
+    JSON Schema for the Array:
     [{
-      "title": "Concise, actionable title",
-      "description": "Why this specific gap is blocking them from ${targetRole}. Be specific about the impact.",
-      "missionTitle": "Protocol: [Specific Task Name]",
-      "missionBrief": "Detailed step-by-step action plan:\n1. First concrete step\n2. Second step with specific resource or tool\n3. Measurable outcome or deliverable\n(Include 3-5 steps per mission)",
-      "actionContent": "Professional LinkedIn post draft that showcases completion of this milestone (include relevant hashtags)"
+      "title": "Short title",
+      "description": "Why this is missing for ${targetRole}.",
+      "missionTitle": "Protocol: [Task Name]",
+      "missionBrief": "A detailed, step-by-step instruction on exactly what the user needs to study, build, or do to close this gap. Be specific.",
+      "actionContent": "A professional LinkedIn post draft announcing completion of this task."
     }]
   `;
 
@@ -173,61 +165,28 @@ export const generateInitialRoadmap = async (fileName: string, targetRole: strin
   } catch (e) {
     console.error('❌ Gemini API Error:', e);
     alert(`AI processing failed: ${e instanceof Error ? e.message : 'Unknown error'}. Using fallback data.`);
-    // Fallback with 5 comprehensive items
+    // Fallback if AI fails
     return [
       {
         id: crypto.randomUUID(),
         type: 'gap',
-        title: 'Master Core Framework',
-        description: `${targetRole} requires deep expertise in modern frameworks that aren't evident in your current resume.`,
+        title: 'Skill Gap: Modern Frameworks',
+        description: `Your resume lacks explicit mention of modern tools required for ${targetRole}.`,
         status: 'active',
-        missionTitle: 'Protocol: Framework Mastery',
-        missionBrief: '1. Complete official React/Next.js documentation\n2. Build 3 progressively complex projects\n3. Deploy all projects with proper CI/CD\n4. Document learnings in blog posts',
-        actionContent: `Just completed my deep dive into modern web frameworks! Built and deployed 3 production-ready projects. Excited to bring these skills to my next role as ${targetRole}. #WebDev #React #NextJS`,
+        missionTitle: 'Protocol: Portfolio Update',
+        missionBrief: 'Step 1: Initialize a Next.js project. Step 2: Build a landing page demonstrating server-side rendering. Step 3: Deploy to Vercel.',
+        actionContent: `Excited to share my latest project targeting ${targetRole} skills! Check out the repo. #Coding`,
         timestamp: new Date()
       },
       {
         id: crypto.randomUUID(),
         type: 'gap',
-        title: 'Build Public Portfolio',
-        description: `${targetRole} positions require demonstrable work. Your GitHub/portfolio needs enhancement.`,
+        title: 'Certification Audit',
+        description: `To reach ${targetRole}, a cloud certification is highly recommended.`,
         status: 'active',
-        missionTitle: 'Protocol: Portfolio Excellence',
-        missionBrief: '1. Create professional portfolio website\n2. Showcase 5 best projects with case studies\n3. Include technical blog (3+ posts)\n4. Optimize for SEO and mobile',
-        actionContent: `Excited to launch my new portfolio website! Featuring deep dives into my recent projects and technical learnings. Check it out! 🚀 #DevPortfolio #TechBlog`,
-        timestamp: new Date()
-      },
-      {
-        id: crypto.randomUUID(),
-        type: 'gap',
-        title: 'Earn Industry Certification',
-        description: `Professional certification validates your expertise and is often required for ${targetRole}.`,
-        status: 'active',
-        missionTitle: 'Protocol: Professional Certification',
-        missionBrief: '1. Research relevant certifications (AWS/Azure/GCP)\n2. Complete official training course\n3. Take 3 practice exams (score 85%+)\n4. Pass certification exam',
-        actionContent: `Proud to announce I\'ve earned my [Certification Name]! This validates my cloud architecture skills and readiness for ${targetRole}. 🎓 #CloudComputing #Certification`,
-        timestamp: new Date()
-      },
-      {
-        id: crypto.randomUUID(),
-        type: 'gap',
-        title: 'Develop Leadership Skills',
-        description: `${targetRole} requires proven leadership and communication abilities beyond technical skills.`,
-        status: 'active',
-        missionTitle: 'Protocol: Leadership Development',
-        missionBrief: '1. Lead a team project or open-source initiative\n2. Present technical topics in 2+ team meetings\n3. Mentor junior developers or students\n4. Document leadership learnings',
-        actionContent: `Grateful for the opportunity to lead our latest project and mentor emerging developers. Leadership isn\'t just about code—it\'s about people. #TechLeadership #Mentorship`,
-        timestamp: new Date()
-      },
-      {
-        id: crypto.randomUUID(),
-        type: 'gap',
-        title: 'Strengthen Online Presence',
-        description: `${targetRole} professionals maintain strong visibility through content creation and community engagement.`,
-        status: 'active',
-        missionTitle: 'Protocol: Digital Presence',
-        missionBrief: '1. Post technical content weekly on LinkedIn\n2. Contribute to 3 open-source projects\n3. Attend/speak at 2 tech events or meetups\n4. Build audience of 500+ engaged connections',
-        actionContent: `Reflecting on my journey building my professional brand: 20+ technical posts, contributions to major OSS projects, and meaningful connections with amazing developers. Here\'s what I learned... #TechCommunity #OpenSource`,
+        missionTitle: 'Protocol: AWS/GCP Foundations',
+        missionBrief: '1. Complete the Cloud Practitioner Essentials course. 2. Take one practice exam. 3. Score at least 80%.',
+        actionContent: 'Just passed a mock exam for Cloud Foundations. One step closer to certification!',
         timestamp: new Date()
       }
     ];
